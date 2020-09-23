@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
+var uid = require('uid');
 
 app.use('/', express.static('client'));
 
@@ -20,7 +21,7 @@ var Student = function(id){
 	return self;
 }
 
-var Room = function(setId,teacherName,settings){
+var Room = function(setId,teacherName, teacherId,settings){
   var id = uid(6);
   var self = {
     id:id,
