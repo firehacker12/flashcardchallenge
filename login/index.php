@@ -70,9 +70,13 @@
       </div>
     </nav>
     <div>
-      <img src="../img/classroomimage.jpg" style="width:100%;object-fit:cover;object-position:0 75;height:75vh;filter: brightness(20%);z-index:-1;" />
-      <h1 class="has-text-centered" style="z-index: 1;">Quizzard</h1>
-      <h2>Study tool of the future</h2>
+      <div style="position:absolute;top:0;left:0;">
+        <img src="../img/classroomimage.jpg" style="width:100%;object-fit:cover;object-position:0 75;height:75vh;filter: brightness(20%);z-index:-1;" />
+      </div>
+      <div style="position:absolute;top:0;left:0;">
+        <h1 class="has-text-centered" style="z-index: 1;">Quizzard</h1>
+        <h2>Study tool of the future</h2>
+      </div>
     </div>
   </body>
   <script>
