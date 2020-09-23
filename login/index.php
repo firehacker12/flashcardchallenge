@@ -11,25 +11,25 @@
     <link href="style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <img src="../img/logo.png" style="margin-left:5px;margin-top:5px;width:64px;height:64px;" >
+        <img src="../img/logo.png" style="margin-left:15px;margin-top:5px;width:64px;height:64px;" >
 
-        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainnavbar">
+        <a role="button" id="burger" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
 
-      <div id="mainnavbar" class="navbar-menu">
+      <div id="navbar" class="navbar-menu" style="margin-left: 25px;">
         <div class="navbar-start">
-          <a class="navbar-item">
+          <a class="navbar-item" href="../home">
             Home
           </a>
 
-          <a class="navbar-item">
-            Documentation
+          <a class="navbar-item" href="../aboutus">
+            About Us
           </a>
 
           <div class="navbar-item has-dropdown is-hoverable">
@@ -69,9 +69,18 @@
         </div>
       </div>
     </nav>
+    <div>
+      <img src="../img/classroomimage.jpg" style="width:100%;object-fit:cover;object-position:0 75;height:75vh;filter: brightness(20%);z-index:-1;" />
+      <h1 class="has-text-centered" style="z-index: 1;">Quizzard</h1>
+      <h2>Study tool of the future</h2>
+    </div>
   </body>
   <script>
-    var burger = document.getElementById("mainnavbar");
-    
+    var burger = document.getElementById("burger");
+    var nav = document.getElementById("navbar");
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('is-active');
+      nav.classList.toggle('is-active');
+    });
   </script>
 </html>
