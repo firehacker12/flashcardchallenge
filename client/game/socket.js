@@ -1,7 +1,7 @@
 var socket = io(":2000");
 
 function roomMake(){
-  socket.emit('createRoom','a','yes','teacher','settings');
+  socket.emit('createRoom','yes','teacher','settings');
 }
 
 function roomJoin(){
@@ -9,3 +9,7 @@ function roomJoin(){
   let nameTmp = document.getElementById('enterName').value;
   socket.emit('joinRoom',roomTmp,nameTmp);
 }
+
+socket.on('testCode',(code) => {
+  console.log(code);
+});
