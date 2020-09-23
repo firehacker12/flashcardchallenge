@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
+//import uid from 'uid';
 
 app.use('/', express.static('client'));
 
@@ -41,6 +42,7 @@ io.sockets.on('connection', function(socket){
 	SOCKET_LIST[socket.id] = socket;
 	var student = Student(socket.id);
 	STUDENT_LIST[socket.id] = student;
+	//console.log(uid(6));
 
   socket.on('createRoom',(classCode,setId,teacherName,settings) => {
 
