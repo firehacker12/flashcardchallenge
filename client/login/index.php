@@ -75,7 +75,19 @@
       </div>
       <div style="position:absolute;top:5em;left:0;width:100%;">
         <h1 class="textShadow has-text-centered has-text-white has-text-weight-semibold" style="z-index: 1;font-size: 8em;">Quizzard</h1>
-        <h2 class="textShadow has-text-centered has-text-white has-text-weight-semibold" style="z-index: 1;font-size: 4em;">Study tool of the future</h2>
+        <h2 class="textShadow has-text-centered has-text-white has-text-weight-semibold" style="z-index: 1;font-size: 4em;padding-bottom:50px;">Study tool of the future</h2>
+        <hr/>
+        <div class="columns">
+          <div class="column has-text-centered">
+            <h1 class="is-size-1 has-text-white textShadow">Educational!</h1>
+          </div>
+          <div class="column has-text-centered">
+            <h1 class="is-size-1 has-text-white textShadow">Fun!</h1>
+          </div>
+          <div class="column has-text-centered">
+            <h1 class="is-size-1 has-text-white textShadow">Competitive!</h1>
+          </div>
+        </div>
       </div>
     </div>
   </body>
