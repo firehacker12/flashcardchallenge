@@ -2,14 +2,21 @@
   <head>
     <title>Game</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
   </head>
   <body>
     <center>
+      <div id='joinMake'>
         <input id="enterName" placeholder="Name" maxlength="10" type="text"/>
         <input id="enterCode" placeholder="Code" maxlength="6" type="text"/>
         <button id="0" onclick="roomJoin();" >Join</button>
         <button id="0" onclick="roomMake();" >Make</button>
+      </div>
+      <div id='lobbyScreen' style='display:none;'>
+        <h1>Lobby</h1>
+        
+      </div>
       </center>
   </body>
 </html>

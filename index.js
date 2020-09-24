@@ -48,13 +48,13 @@ io.sockets.on('connection', function(socket){
   socket.on('createRoom',(setId,teacherName,settings) => {
 		var tmpRoom = new Room(setId,teacherName,socket.id,settings);
 		ROOM_LIST[tmpRoom.id] = tmpRoom;
-		socket.emit('testCode',ROOM_LIST[tmpRoom.id]);
+		socket.emit('joinLobby',ROOM_LIST[tmpRoom.id]);
   });
 
   socket.on('joinRoom',(code,name)=> {
 		if(ROOM_LIST[code].id == code){
 			ROOM_LIST[code].students.push({name:name,id:socket.id});
-			socket.emit("testCode",ROOM_LIST[code]);
+			socket.emit("joinLobby",ROOM_LIST[code]);
 		}
   });
 

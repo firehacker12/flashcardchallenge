@@ -13,3 +13,8 @@ function roomJoin(){
 socket.on('testCode',(code) => {
   console.log(code);
 });
+
+socket.on('joinLobby',(code) => {
+  document.getElementById('joinMake').setAttribute("style","display:none");
+  document.getElementById('lobbyScreen').setAttribute("style","");
+});
