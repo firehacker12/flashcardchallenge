@@ -89,10 +89,10 @@
           </div>
         </div>
       </div>-->
-      <form action="/login.php" method="POST">
-        <input placeholder="Username or Email" type="text" name="username" maxlength="20" />
+      <form action="../../login.php" method="POST">
+        <input placeholder="Username or Email" type="text" name="username" maxlength="100" />
         <input placeholder="Password" type="password" name="password" />
-        <input type="submit" />
+        <input type="submit" placeholder="Login" />
       </form>
       <p>or <a href="../register">register here</a></p>
     </div>
