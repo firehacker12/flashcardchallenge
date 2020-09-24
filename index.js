@@ -64,6 +64,17 @@ io.sockets.on('connection', function(socket){
 		}
   });
 
+	socket.on('endRoom', (code) => {
+		if(ROOM_LIST[code]){
+			if(ROOM_LIST[code].teacherId == socket.id){
+				for(var i=0; i<ROOM_LIST[code].students.length; i++){
+					SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('roomClosed');
+				}
+				socket.emit('roomClosed');
+			}
+		}
+	});
+
 	socket.on('disconnect',function() {
 
 	});
