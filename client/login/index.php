@@ -70,7 +70,7 @@
       </div>
     </nav>
     <div>
-      <div style="position:absolute;top:5em;left:0;">
+      <!--<div style="position:absolute;top:5em;left:0;">
         <img src="../img/classroomimage.jpg" style="width:100%;object-fit:cover;object-position:0 75;height:75vh;z-index:-1;filter: brightness(20%);" />
       </div>
       <div style="position:absolute;top:5em;left:0;width:100%;">
@@ -88,7 +88,13 @@
             <h1 class="is-size-1 has-text-white textShadow">Competitive!</h1>
           </div>
         </div>
-      </div>
+      </div>-->
+      <form action="/login.php" method="POST">
+        <input placeholder="Username or Email" type="text" name="username" maxlength="20" />
+        <input placeholder="Password" type="password" name="password" />
+        <input type="submit" />
+      </form>
+      <p>or <a href="../register">register here</a></p>
     </div>
   </body>
   <script>
