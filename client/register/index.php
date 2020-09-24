@@ -1,5 +1,18 @@
 <?php
-
+  session_start();
+  if (isset($_SESSION['loginerror'])) {
+    if ($_SESSION['loginerror'] == "Incorrect Email or Password") {
+      $_SESSION['loginerror'] = "";
+      $loginError = "";
+    }
+    else {
+      $loginError = $_SESSION['loginerror'];
+    }
+  }
+  else {
+    $_SESSION['loginerror'] = "";
+    $loginError = "";
+  }
 ?>
 
 <html>
@@ -96,6 +109,7 @@
         <input type="submit" placeholder="Register" />
       </form>
       <p>or <a href="../login">login here</a></p>
+      <?php echo "<p style='color:red;'>$loginError</p>"; ?>
     </div>
   </body>
   <script>

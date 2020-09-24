@@ -9,18 +9,41 @@
 
   $response = @mysqli_query($conn, $query);
 
-  echo $username;
-
   if ($response) {
     while ($row = mysqli_fetch_array($response)) {
       if ($row['Username'] == $username || $row['Email'] == $username) {
         if (password_verify($password, $row['Password'])) {
           //Correct password
           $_SESSION['Username'] = $row['Username'];
+
+          if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+      			$uri = 'https://';
+      		} else {
+      			$uri = 'http://';
+      		}
+      		$uri .= $_SERVER['HTTP_HOST'];
+      		header("Location: ".$uri."/flashcardchallenge/client/home");
         }
         else {
-          echo "no, that's not right";
+          $_SESSION['loginerror'] = "Incorrect Email or Password";
+          if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+      			$uri = 'https://';
+      		} else {
+      			$uri = 'http://';
+      		}
+      		$uri .= $_SERVER['HTTP_HOST'];
+      		header("Location: ".$uri."/flashcardchallenge/client/login");
         }
+      }
+      else {
+        $_SESSION['loginerror'] = "Incorrect Email or Password";
+        if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+          $uri = 'https://';
+        } else {
+          $uri = 'http://';
+        }
+        $uri .= $_SERVER['HTTP_HOST'];
+        header("Location: ".$uri."/flashcardchallenge/client/login");
       }
     }
   }

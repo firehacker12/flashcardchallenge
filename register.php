@@ -8,15 +8,38 @@
 
   $password = password_hash($password, PASSWORD_DEFAULT);
 
-  $query = "INSERT INTO login (Username, Email, Password) values('$username', '$email', '$password')";
+  $SELECT = "SELECT Username From login Where Username = ? Limit 1";
+	$INSERT = "INSERT Into login (Username, Email, Password) values(?, ?, ?)";
+	$stmt = $conn->prepare($SELECT);
+	$stmt->bind_param("s", $username);
+	$stmt->execute();
+	$stmt->bind_result($username);
+	$stmt->store_result();
+	$rnum = $stmt->num_rows();
 
-  $response = @mysqli_query($conn, $query);
+  if ($rnum == 0) {
+    $stmt->close();
+    $stmt = $conn->prepare($INSERT);
+    $stmt->bind_param("sss", $username, $email, $password);
+    $stmt->execute();
+    $_SESSION['Username'] = $username;
 
-  if ($response) {
-    echo "Successfully added query";
-    $_SESSION['Username'] = $row['Username'];
+    if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+			$uri = 'https://';
+		} else {
+			$uri = 'http://';
+		}
+		$uri .= $_SERVER['HTTP_HOST'];
+		header("Location: ".$uri."/flashcardchallenge/client/home");
   }
   else {
-    echo "Error occured";
+    $_SESSION['loginerror'] = "Username or Email taken!";
+    if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+      $uri = 'https://';
+    } else {
+      $uri = 'http://';
+    }
+    $uri .= $_SERVER['HTTP_HOST'];
+    header("Location: ".$uri."/flashcardchallenge/client/register");
   }
 ?>

@@ -1,5 +1,18 @@
 <?php
-
+  session_start();
+  if (isset($_SESSION['loginerror'])) {
+    if ($_SESSION['loginerror'] == "Username or Email taken!") {
+      $_SESSION['loginerror'] = "";
+      $loginError = "";
+    }
+    else {
+      $loginError = $_SESSION['loginerror'];
+    }
+  }
+  else {
+    $_SESSION['loginerror'] = "";
+    $loginError = "";
+  }
 ?>
 
 <html>
@@ -95,6 +108,7 @@
         <input type="submit" placeholder="Login" />
       </form>
       <p>or <a href="../register">register here</a></p>
+      <?php echo "<p style='color:red;'>$loginError</p>"; ?>
     </div>
   </body>
   <script>
