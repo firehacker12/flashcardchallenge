@@ -16,7 +16,8 @@ var ROOM_LIST = {};
 
 var Student = function(id){
 	var self = {
-		id:id
+		id:id,
+		room:null
 	}
 	return self;
 }
@@ -49,6 +50,7 @@ io.sockets.on('connection', function(socket){
 		var tmpRoom = new Room(setId,teacherName,socket.id,settings);
 		ROOM_LIST[tmpRoom.id] = tmpRoom;
 		socket.emit('joinLobby',ROOM_LIST[tmpRoom.id],socket.id);
+		STUDENT_LIST[socket.id].room = tmpRoom.id;
   });
 
   socket.on('joinRoom',(code,name)=> {
@@ -56,10 +58,13 @@ io.sockets.on('connection', function(socket){
 			if(ROOM_LIST[code].id == code){
 				ROOM_LIST[code].students.push({name:name,id:socket.id});
 				socket.emit("joinLobby",ROOM_LIST[code],socket.id);
+				STUDENT_LIST[socket.id].room = tmpRoom.id;
 				SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
 				for(var i=0; i<ROOM_LIST[code].students.length; i++){
-					if(socket.id != ROOM_LIST[code].students[i].id){
-						SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+					if(ROOM_LIST[code].students[i]){
+						if(socket.id != ROOM_LIST[code].students[i].id){
+							SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+						}
 					}
 				}
 			}
@@ -70,14 +75,33 @@ io.sockets.on('connection', function(socket){
 		if(ROOM_LIST[code]){
 			if(ROOM_LIST[code].teacherId == socket.id){
 				for(var i=0; i<ROOM_LIST[code].students.length; i++){
-					SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('roomClosed');
+					if(ROOM_LIST[code].students[i]){
+						SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('roomClosed');
+						STUDENT_LIST[ROOM_LIST[code].students[i].id].room = tmpRoom.id;
+				  }
 				}
 				socket.emit('roomClosed');
+				STUDENT_LIST[socket.id].room = tmpRoom.id;
 			}
 		}
 	});
 
 	socket.on('disconnect',function() {
-
+		if(STUDENT_LIST[socket.id].room != null){
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+				var room = STUDENT_LIST[socket.id].room;
+				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
+					if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id == socket.id){
+					 	delete ROOM_LIST[STUDENT_LIST[socket.id].room].students[i];
+						for(var i=0; i<ROOM_LIST[room].students.length; i++){
+							if(ROOM_LIST[room].students[i]){
+								SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
 	});
 });
