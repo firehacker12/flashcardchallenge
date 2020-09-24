@@ -48,13 +48,19 @@ io.sockets.on('connection', function(socket){
   socket.on('createRoom',(setId,teacherName,settings) => {
 		var tmpRoom = new Room(setId,teacherName,socket.id,settings);
 		ROOM_LIST[tmpRoom.id] = tmpRoom;
-		socket.emit('joinLobby',ROOM_LIST[tmpRoom.id]);
+		socket.emit('joinLobby',ROOM_LIST[tmpRoom.id],socket.id);
   });
 
   socket.on('joinRoom',(code,name)=> {
 		if(ROOM_LIST[code].id == code){
 			ROOM_LIST[code].students.push({name:name,id:socket.id});
-			socket.emit("joinLobby",ROOM_LIST[code]);
+			socket.emit("joinLobby",ROOM_LIST[code],socket.id);
+			SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
+			for(var i=0; i<ROOM_LIST[code].students.length; i++){
+				if(socket.id != ROOM_LIST[code].students[i].id){
+					SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+				}
+			}
 		}
   });
 
