@@ -1,7 +1,9 @@
 var socket = io(":2000");
+var id = null;
 
 function roomMake(){
-  socket.emit('createRoom','yes','teacher','settings');
+  let nameTmp = document.getElementById('enterName').value;
+  socket.emit('createRoom','yes',nameTmp,'settings');
 }
 
 function roomJoin(){
@@ -14,7 +16,19 @@ socket.on('testCode',(code) => {
   console.log(code);
 });
 
-socket.on('joinLobby',(code) => {
+socket.on('joinLobby',(room,id_) => {
   document.getElementById('joinMake').setAttribute("style","display:none");
   document.getElementById('lobbyScreen').setAttribute("style","");
+  id = id_;
+  document.getElementById('studentLobbyList').innerHTML = "";
+  for(var i=0; i<room.students.length; i++){
+    document.getElementById('studentLobbyList').innerHTML += "<p1>"+room.students[i].name+"</p1><br>";
+  }
+});
+
+socket.on('updateLobby',(room) => {
+  document.getElementById('studentLobbyList').innerHTML = "";
+  for(var i=0; i<room.students.length; i++){
+    document.getElementById('studentLobbyList').innerHTML += "<p1>"+room.students[i].name+"</p1><br>";
+  }
 });
