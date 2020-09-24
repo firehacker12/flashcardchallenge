@@ -52,13 +52,15 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('joinRoom',(code,name)=> {
-		if(ROOM_LIST[code].id == code){
-			ROOM_LIST[code].students.push({name:name,id:socket.id});
-			socket.emit("joinLobby",ROOM_LIST[code],socket.id);
-			SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
-			for(var i=0; i<ROOM_LIST[code].students.length; i++){
-				if(socket.id != ROOM_LIST[code].students[i].id){
-					SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+		if(ROOM_LIST[code]){
+			if(ROOM_LIST[code].id == code){
+				ROOM_LIST[code].students.push({name:name,id:socket.id});
+				socket.emit("joinLobby",ROOM_LIST[code],socket.id);
+				SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
+				for(var i=0; i<ROOM_LIST[code].students.length; i++){
+					if(socket.id != ROOM_LIST[code].students[i].id){
+						SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+					}
 				}
 			}
 		}
