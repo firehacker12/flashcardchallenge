@@ -58,7 +58,7 @@ io.sockets.on('connection', function(socket){
 			if(ROOM_LIST[code].id == code){
 				ROOM_LIST[code].students.push({name:name,id:socket.id});
 				socket.emit("joinLobby",ROOM_LIST[code],socket.id);
-				STUDENT_LIST[socket.id].room = tmpRoom.id;
+				STUDENT_LIST[socket.id].room = ROOM_LIST[code].id;
 				SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
 				for(var i=0; i<ROOM_LIST[code].students.length; i++){
 					if(ROOM_LIST[code].students[i]){
@@ -95,9 +95,10 @@ io.sockets.on('connection', function(socket){
 					 	delete ROOM_LIST[STUDENT_LIST[socket.id].room].students[i];
 						for(var i=0; i<ROOM_LIST[room].students.length; i++){
 							if(ROOM_LIST[room].students[i]){
-								SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+								SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room]);
 							}
 						}
+						SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room])
 						break;
 					}
 				}
