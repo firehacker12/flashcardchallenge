@@ -106,3 +106,13 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 });
+
+function cleanArray(arr) {
+	var arr_ = [];
+	for (var i=0; i<arr.length; i++) {
+		if (arr[i]) {
+			arr_.push(arr[i]);
+		}
+	}
+	return arr_;
+}
