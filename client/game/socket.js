@@ -14,7 +14,7 @@ socket.on('testCode',(code) => {
   console.log(code);
 });
 
-socket.on('joinLobby',(code) => {
+socket.on('joinLobby',(room) => {
   document.getElementById('joinMake').setAttribute("style","display:none");
   document.getElementById('lobbyScreen').setAttribute("style","");
 });
