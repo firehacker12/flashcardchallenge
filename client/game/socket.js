@@ -20,6 +20,7 @@ socket.on('joinLobby',(room,id_) => {
   document.getElementById('joinMake').setAttribute("style","display:none");
   document.getElementById('lobbyScreen').setAttribute("style","");
   id = id_;
+  document.getElementById('lobbyCode').innerHTML = room.id;
   document.getElementById('studentLobbyList').innerHTML = "";
   for(var i=0; i<room.students.length; i++){
     document.getElementById('studentLobbyList').innerHTML += "<p1>"+room.students[i].name+"</p1><br>";
@@ -27,6 +28,7 @@ socket.on('joinLobby',(room,id_) => {
 });
 
 socket.on('updateLobby',(room) => {
+  document.getElementById('lobbyCode').innerHTML = room.id;
   document.getElementById('studentLobbyList').innerHTML = "";
   for(var i=0; i<room.students.length; i++){
     document.getElementById('studentLobbyList').innerHTML += "<p1>"+room.students[i].name+"</p1><br>";
