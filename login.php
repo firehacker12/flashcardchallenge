@@ -1,4 +1,5 @@
 <?php
+  session_start();
   include "client/classes/init.php";
 
   $username = $_POST['username'];
@@ -14,7 +15,8 @@
     while ($row = mysqli_fetch_array($response)) {
       if ($row['Username'] == $username || $row['Email'] == $username) {
         if (password_verify($password, $row['Password'])) {
-          echo "Correct password";
+          //Correct password
+          $_SESSION['Username'] = $row['Username'];
         }
         else {
           echo "no, that's not right";

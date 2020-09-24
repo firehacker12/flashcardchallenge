@@ -1,4 +1,5 @@
 <?php
+  session_start();
   include "client/classes/init.php";
 
   $username = $_POST['username'];
@@ -13,6 +14,7 @@
 
   if ($response) {
     echo "Successfully added query";
+    $_SESSION['Username'] = $row['Username'];
   }
   else {
     echo "Error occured";
