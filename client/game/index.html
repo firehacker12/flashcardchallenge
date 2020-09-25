@@ -2,16 +2,30 @@
   <head>
     <title>Game</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
   </head>
   <body>
     <center>
       <div id='joinMake'>
-        <input id="enterName" placeholder="Name" maxlength="10" type="text"/><br>
-        <input id="enterCode" placeholder="Code" maxlength="6" type="text"/><br>
-        <button id="0" onclick="roomJoin();" >Join</button><br>
-        <button id="0" onclick="roomMake();" >Make</button><br>
+        <br>
+        <h1 style="font-family: 'Permanent Marker', cursive;font-size:4em;">Quizzard</h1>
+
+        <div id="codeE" style="position:absolute;top:40%;left:45%;width:10%;height:10%;">
+          <input id="enterCode" placeholder="Code" maxlength="6" type="text" style="width:100%;height:50%;font-family: 'Permanent Marker', cursive;font-size:1.5em;"/><br><br>
+          <button id="0" onclick="roomJoin();" style="width:95%;height:40%;font-family: 'Permanent Marker', cursive;font-size:1.5em;" >Join</button><br>
+
+        </div>
+
+        <div id="nameE" style="position:absolute;top:40%;left:45%;width:10%;height:10%;">
+          <input id="enterName" placeholder="Name" maxlength="6" type="text" style="width:100%;height:50%;font-family: 'Permanent Marker', cursive;font-size:1.5em;"/><br><br>
+          <button id="0" onclick="switchName();" style="width:95%;height:40%;font-family: 'Permanent Marker', cursive;font-size:1.5em;" >Enter</button><br>
+          <p style="display:none;" id="nameError">Enter A Valid Name</p>
+        </div>
+
+
+
       </div>
       <div id='lobbyScreen' style='display:none;'>
         <h1>Lobby</h1>

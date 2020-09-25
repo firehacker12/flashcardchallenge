@@ -8,6 +8,17 @@ function roomMake(){
   socket.emit('createRoom','yes',nameTmp,'settings');
 }
 
+function switchName(){
+  //document.getElementById("codeE").setAttribute("style","display:none;");
+  if(document.getElementById('enterName').value.trim() != ""){
+    document.getElementById("nameE").setAttribute("style","display:none;");
+  }
+  else{
+    document.getElementById('enterName').value = "";
+    document.getElementById('nameError').setAttribute("style","color:red;");
+  }
+}
+
 function endRoom(){
   if(teacher){
     socket.emit('endRoom',gameCode);
@@ -15,9 +26,11 @@ function endRoom(){
 }
 
 function roomJoin(){
-  let roomTmp = document.getElementById('enterCode').value;
-  let nameTmp = document.getElementById('enterName').value;
-  socket.emit('joinRoom',roomTmp,nameTmp);
+  let roomTmp = document.getElementById('enterCode').value.trim();
+  let nameTmp = document.getElementById('enterName').value.trim();
+  if(roomTmp.length == 6){
+    socket.emit('joinRoom',roomTmp,nameTmp);
+  }
 }
 
 function startGame(){
