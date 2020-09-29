@@ -7,97 +7,73 @@
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&family=Source+Sans+Pro:ital,wght@1,300&display=swap" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <img src="../img/logo.png" style="margin-left:15px;margin-top:5px;width:64px;height:64px;" >
-
-        <a role="button" id="burger" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+      <div style="position:absolute;top:0px;left:0px;z-index:0;width:100%;">
+        <img id="backgroundImage" src="../img/classroomimage3.jpg" class="hasImage" />
       </div>
-
-      <div id="navbar" class="navbar-menu" style="margin-left: 0px;">
-        <div class="navbar-start">
-          <a class="navbar-item has-text-weight-semibold has-text-centered" href="../home">
-            Home
-          </a>
-
-          <a class="navbar-item has-text-weight-semibold has-text-centered" href="../aboutus">
-            About Us
-          </a>
-
-          <a class="navbar-item has-text-weight-semibold has-text-centered" href="../contact">
-            Contact
-          </a>
-        </div>
-      </div>
-    </nav>
-    <div>
-      <div style="position:absolute;top:0em;left:0px;z-index:0;">
-        <img src="../img/classroomimage.png" class="hasImage" />
-      </div>
-      <div style="position:absolute;top:7em;left:0px;z-index:1;width:100%;margin-top: 10px;">
-        <h1 class="has-text-centered has-text-white" style="font-size: 7em;text-shadow: 0px 0px 5px black;">Quizzard</h1>
+      <div style="position:absolute;top:5vh;left:0px;z-index:1;width:100%;margin-top: 10px;">
+        <h1 class="has-text-centered has-text-white" style="font-size: 12em;text-shadow: 0px 0px 5px black;">Quizzard</h1>
         <h1 class="has-text-centered has-text-white" style="font-size: 4em;text-shadow: 0px 0px 5px black;">Interactive study tool</h1>
         <br/><br/>
-        <div class="columns">
-          <div class="column" style="border-right: 2px solid white;padding-bottom: 75px;">
+        <div style="width:100%;display:inline-block;display:flex;">
+          <div style="border-right: 2px solid white;padding-bottom: 75px;display:inline-block;width:50%;">
             <h1 class="has-text-centered has-text-white is-size-1" style="text-shadow: 0px 0px 5px black;">Student</h1>
             <center><button class="button is-success is-large is-outlined" onclick="window.location.href = '../game/';">Play</button></center>
-          </div>
-          <div class="column">
+          </div><!--
+          --><div style="display:inline-block;width:50%;">
             <h1 class="has-text-centered has-text-white is-size-1" style="text-shadow: 0px 0px 5px black;">Teacher</h1>
             <center><div>
-              <button class="button is-danger is-large is-outlined" style="margin-right: 10px;">Sign Up</button>
+              <button class="button is-danger is-large is-outlined" style="margin-right: 10px;" onclick="window.location.href = '../register';">Sign Up</button>
               <p class="is-size-4 has-text-white" style="display: inline;line-height: 60px;">Or</p>
-              <button class="button is-success is-large is-outlined" style="margin-left: 10px;">Login</button>
+              <button class="button is-success is-large is-outlined" style="margin-left: 10px;" onclick="window.location.href = '../login';">Login</button>
             </div></center>
           </div>
-      </div>
-      <hr/>
-      <br/><br/>
-      <div class="columns">
-        <div class="column" style="border-right: 2px solid white;">
-          <center><h1 class="has-text-centered has-text-white is-size-1" style="text-shadow: 0px 0px 5px black;">Fun</h1></center>
-        </div>
-        <div class="column" style="border-right: 2px solid white;">
-          <center><h1 class="has-text-centered has-text-white is-size-1" style="text-shadow: 0px 0px 5px black;">Easy</h1></center>
-        </div>
-        <div class="column">
-          <center><h1 class="has-text-centered has-text-white is-size-1" style="text-shadow: 0px 0px 5px black;">Free</h1></center>
         </div>
       </div>
-    </div>
-    <h1 class="test">ALKJWEILJWWEJI</h1>
-
   </body>
   <script>
-    var burger = document.getElementById("burger");
+    setInterval(() => {
+      if (screen.width < 400) {
+        document.getElementById("backgroundImage").setAttribute("style","object-position: -1800px 0px;");
+      }
+      else if (screen.width < 768) {
+        document.getElementById("backgroundImage").setAttribute("style","object-position: -800px 0px;");
+      }
+      //else if (screen.width < 1000) {
+      //  document.getElementById("backgroundImage").setAttribute("style","object-position: -500px 0px;");
+      //}
+      else {
+        document.getElementById("backgroundImage").setAttribute("style","");
+      }
+    }, 100);
+
+    /*var burger = document.getElementById("burger");
     var nav = document.getElementById("navbar");
     burger.addEventListener('click', () => {
       burger.classList.toggle('is-active');
       nav.classList.toggle('is-active');
-    });
+    });*/
   </script>
   <style>
+    html, body {
+      overflow: hidden;
+    }
     .navbar {
       height: 5em;
       background-color: rgba(0, 0, 0, .2);
     }
     h1, h2, h3, h4, h5, h6 {
-      font-family: 'Baloo Tammudu 2', cursive;
+      font-family: 'Raleway', sans-serif;
     }
 
     .hasImage {
       width:100%;
       object-fit:cover;
-      height:75vh;
+      height:100vh;
       object-position: 0px 0px;
-      filter:brightness(20%);
+      filter:brightness(40%);
     }
 
     button {
@@ -107,24 +83,6 @@
 
     * {
       color: inherit;
-    }
-    .test {
-      color: black;
-      z-index: 2;
-    }
-
-    @media (max-width: 768px) {
-      .hasImage {
-        width:100%;
-        object-fit:cover;
-        height:75vh;
-        object-position: -500px 0px;
-        filter:brightness(20%);
-      }
-      .test {
-        z-index: 2;
-        color: white;
-      }
     }
   </style>
 </html>
