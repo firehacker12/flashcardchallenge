@@ -31,11 +31,20 @@ function roomJoin(){
   if(roomTmp.length == 6){
     socket.emit('joinRoom',roomTmp,nameTmp);
   }
+  else{
+    document.getElementById('enterCode').value = "";
+    document.getElementById('codeError').setAttribute("style","color:red;");
+  }
 }
 
 function startGame(){
 
 }
+
+scocket.on('wrongCode',()=> {
+  document.getElementById('enterCode').value = "";
+  document.getElementById('codeError').setAttribute("style","color:red;");
+});
 
 socket.on('testCode',(code) => {
   console.log(code);

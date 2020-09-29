@@ -69,6 +69,9 @@ io.sockets.on('connection', function(socket){
 				}
 			}
 		}
+		else{
+			socket.emit('wrongCode');
+		}
   });
 
 	socket.on('endRoom', (code) => {
