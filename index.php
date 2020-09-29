@@ -5,5 +5,5 @@
     $uri = 'http://';
   }
   $uri .= $_SERVER['HTTP_HOST'];
-  header("Location: ".$uri."/flashcardchallenge/client/home");
+  header("Location: ".$uri."/flashcardchallenge/client/introduction");
 ?>

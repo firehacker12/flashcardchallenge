@@ -19,7 +19,6 @@
   <head>
     <title>Quizzard</title>
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-    <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link href="style.css" type="text/css" rel="stylesheet" />
   </head>
