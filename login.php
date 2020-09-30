@@ -36,7 +36,7 @@
         }
       }
       else {
-        $_SESSION['loginerror'] = "Incorrect Email or Password";
+        $_SESSION['loginerror'] = "Incorrect Email/Username or Password";
         if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
           $uri = 'https://';
         } else {
