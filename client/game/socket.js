@@ -41,7 +41,7 @@ function startGame(){
 
 }
 
-scocket.on('wrongCode',()=> {
+socket.on('wrongCode',()=> {
   document.getElementById('enterCode').value = "";
   document.getElementById('codeError').setAttribute("style","color:red;");
 });
