@@ -2,6 +2,7 @@
   <head>
     <title>Game</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
@@ -23,9 +24,6 @@
           <button id="0" onclick="switchName();" style="width:95%;height:40%;font-family: 'Permanent Marker', cursive;font-size:1.5em;" >Enter</button><br>
           <p style="display:none;" id="nameError">Enter A Valid Name</p>
         </div>
-
-
-
       </div>
       <div id='lobbyScreen' style='display:none;'>
         <h1>Lobby</h1>
@@ -35,6 +33,12 @@
 
         </div>
       </div>
+
+      <div id="matchingGame">
+        <script src="match.js"></script>
+      </div>
+
+
       </center>
   </body>
 </html>
