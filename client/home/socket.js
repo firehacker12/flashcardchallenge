@@ -3,11 +3,24 @@ var id = null;
 var teacher = false;
 var gameCode = null;
 
-
-
 function roomMake(){
-  //let nameTmp = document.getElementById('enterName').value;
-  let nameTmp = "tmp name";
+  let nameTmp = document.getElementById('teacherName').innerHTML + "'s Room";
+
+  for (var i=0; i<5; i++) {
+    if (document.getElementById('startButton'+i) != undefined) {
+      var makeButton = document.getElementById("startButton"+i).setAttribute("class","button is-medium is-danger is-loading is-disabled");
+    }
+  }
+  for (var i=0; i<5; i++) {
+    if (document.getElementById('roomname'+i) != undefined) {
+      if (document.getElementById('roomname'+i).value.length > 0) {
+        nameTmp = document.getElementById('roomname'+i).value;
+        break;
+      }
+    }
+  }
+  console.log(nameTmp);
+  //let nameTmp = "tmp name";
   let tmpSet = [
     {q:"2+2=?",cA:"fish",fA:["4","2","3","1"]},
     {q:"yes or no",cA:"maybe",fA:["yes","no","si"]},
