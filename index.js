@@ -95,21 +95,27 @@ io.sockets.on('connection', function(socket){
 			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
 				var room = STUDENT_LIST[socket.id].room;
 				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
-					if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id == socket.id){
-					 	delete ROOM_LIST[STUDENT_LIST[socket.id].room].students[i];
-						for(var i=0; i<ROOM_LIST[room].students.length; i++){
-							if(ROOM_LIST[room].students[i]){
-								SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room]);
+					if (exists(ROOM_LIST[STUDENT_LIST[socket.id].room].students)) {
+						if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id == socket.id){
+						 	delete ROOM_LIST[STUDENT_LIST[socket.id].room].students[i];
+							for(var i=0; i<ROOM_LIST[room].students.length; i++){
+								if(ROOM_LIST[room].students[i]){
+									SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room]);
+								}
 							}
+							SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room])
+							break;
 						}
-						SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room])
-						break;
 					}
 				}
 			}
 		}
 	});
 });
+
+function exists(obj) {
+	return (obj != null && obj != undefined);
+}
 
 function cleanArray(arr) {
 	var arr_ = [];

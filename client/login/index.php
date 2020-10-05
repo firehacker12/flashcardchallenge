@@ -1,7 +1,7 @@
 <?php
   session_start();
   if (isset($_SESSION['loginerror'])) {
-    if ($_SESSION['loginerror'] == "Username or Email taken!") {
+    if ($_SESSION['loginerror'] == "Username or Email taken!" || $_SESSION['loginerror'] == "Invalid email address!") {
       $_SESSION['loginerror'] = "";
       $loginError = "";
     }
