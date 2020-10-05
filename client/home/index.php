@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link href="../login/style.css" type="text/css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="socket.js"></script>
   </head>
   <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -78,7 +80,7 @@
       setInterval(() => {
         document.getElementById("popup"+activeIndex).setAttribute("style","");
         document.getElementById("overlay").setAttribute("style","display: none;");
-      }, 500);
+      }, 2000);
     }
   </script>
   <style>

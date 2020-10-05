@@ -95,7 +95,7 @@ io.sockets.on('connection', function(socket){
 			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
 				var room = STUDENT_LIST[socket.id].room;
 				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
-					if (exists(ROOM_LIST[STUDENT_LIST[socket.id].room].students)) {
+					if (exists(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i])) {
 						if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id == socket.id){
 						 	delete ROOM_LIST[STUDENT_LIST[socket.id].room].students[i];
 							for(var i=0; i<ROOM_LIST[room].students.length; i++){
