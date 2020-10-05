@@ -9,35 +9,40 @@ var dragging = null;
 var offset = null;
 var timeTaken = 0.00;
 var going = false;
+var gameType = null;
 
 function setup() {
   createCanvas(800, 800);
   textSize(20);
   //tiles.push(new Tile(100,100,"very funny",0,1));
-  for(var i=0; i<3; i++){
-    spawnTiles(currentSet[i]);
-  }
+  //for(var i=0; i<3; i++){
+    //spawnTiles(currentSet[i]);
+  //}
 
 }
 
 function draw() {
-  if(going){
-    background(220);
-    var doneCheck = true;
-    for(var i=0; i<tiles.length; i++){
-      if(tiles[i]){
-        tiles[i].show();
-        doneCheck = false;
+  if(gameType == "matching"){
+    if(going){
+      background(220);
+      var doneCheck = true;
+      for(var i=0; i<tiles.length; i++){
+        if(tiles[i]){
+          tiles[i].show();
+          doneCheck = false;
+        }
       }
-    }
-    if(doneCheck){
-      console.log(nf(timeTaken,1,2));
-      going = false;
+      if(doneCheck){
+        console.log(nf(timeTaken,1,2));
+        going = false;
+      }
     }
   }
 }
 
-setInterval(function(){ if(going){ timeTaken+=0.01; } }, 10);
+setInterval(function(){ if(gameType=="matching"){if(going){ timeTaken+=0.01; } }}, 10);
+
+
 
 function spawnTiles(tmpSet){
   var randx = random(1,width-(textWidth(tmpSet.q)));
@@ -50,12 +55,16 @@ function spawnTiles(tmpSet){
 }
 
 function mousePressed(){
-  if(0 < mouseX && mouseX < width && 0 < mouseY && mouseY < height){
-    for(var i=0; i<tiles.length; i++){
-      if(tiles[i]){
-        if(tiles[i].x < mouseX && mouseX < tiles[i].x+tiles[i].width && tiles[i].y < mouseY && mouseY < tiles[i].y+tiles[i].height){
-          dragging = i;
-          offset = createVector(mouseX-tiles[i].x,mouseY-tiles[i].y);
+  if(gameType == "matching"){
+    if(going){
+      if(0 < mouseX && mouseX < width && 0 < mouseY && mouseY < height){
+        for(var i=0; i<tiles.length; i++){
+          if(tiles[i]){
+            if(tiles[i].x < mouseX && mouseX < tiles[i].x+tiles[i].width && tiles[i].y < mouseY && mouseY < tiles[i].y+tiles[i].height){
+              dragging = i;
+              offset = createVector(mouseX-tiles[i].x,mouseY-tiles[i].y);
+            }
+          }
         }
       }
     }
@@ -63,28 +72,32 @@ function mousePressed(){
 }
 
 function mouseDragged(){
-  if(dragging != null){
-    if(tiles[dragging]){
-      if(0 < mouseX && mouseX < width && 0 < mouseY && mouseY < height){
-        tiles[dragging].x = mouseX-offset.x;
-        tiles[dragging].y = mouseY-offset.y;
+  if(gameType == "matching"){
+    if(going){
+      if(dragging != null){
+        if(tiles[dragging]){
+          if(0 < mouseX && mouseX < width && 0 < mouseY && mouseY < height){
+            tiles[dragging].x = mouseX-offset.x;
+            tiles[dragging].y = mouseY-offset.y;
+          }
+        }
       }
     }
   }
 }
 
 function mouseReleased(){
-  if(dragging != null){
-    if(tiles[dragging]){
-      tiles[dragging].matchCheck();
-      dragging = null;
+  if(gameType == "matching"){
+    if(going){
+      if(dragging != null){
+        if(tiles[dragging]){
+          tiles[dragging].matchCheck();
+          dragging = null;
+        }
+      }
     }
   }
 }
-
-
-
-
 
 
 
