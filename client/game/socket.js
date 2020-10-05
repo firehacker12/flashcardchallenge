@@ -5,7 +5,7 @@ var gameCode = null;
 
 function roomMake(){
   let nameTmp = document.getElementById('enterName').value;
-  socket.emit('createRoom','yes',nameTmp,'settings');
+  socket.emit('createRoom','yes',nameTmp,{gameType:"null",rounds:5});
 }
 
 function switchName(){
