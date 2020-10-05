@@ -26,6 +26,7 @@ var Room = function(setId,teacherName, teacherId,settings){
   var id = uid(6);
   var self = {
     id:id,
+		setId:setId,
     teacher:teacherName,
 		teacherId:teacherId,
 		settings:settings,

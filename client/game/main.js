@@ -1,9 +1,9 @@
-var currentSet = [
+var currentSet = [];/*[
   {q:"2+2=?",cA:"fish",fA:["4","2","3","1"]},
   {q:"yes or no",cA:"maybe",fA:["yes","no","si"]},
   {q:"funny",cA:"funny",fA:["very funny","not funny","this is a test to see how long these should be and what i should set the limit to"]}
   //{q:"",cA:"",fA:[""]}
-];
+];*/
 var tiles = [];
 var dragging = null;
 var offset = null;
@@ -40,7 +40,7 @@ function draw() {
   }
 }
 
-setInterval(function(){ if(gameType=="matching"){if(going){ timeTaken+=0.01; } }}, 10);
+setInterval(function(){ if(gameType == "matching"){if(going){ timeTaken+=0.01; } }}, 10);
 
 
 
