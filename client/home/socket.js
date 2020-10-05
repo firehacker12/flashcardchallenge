@@ -6,7 +6,8 @@ var gameCode = null;
 
 
 function roomMake(){
-  let nameTmp = document.getElementById('enterName').value;
+  //let nameTmp = document.getElementById('enterName').value;
+  let nameTmp = "tmp name";
   let tmpSet = [
     {q:"2+2=?",cA:"fish",fA:["4","2","3","1"]},
     {q:"yes or no",cA:"maybe",fA:["yes","no","si"]},
