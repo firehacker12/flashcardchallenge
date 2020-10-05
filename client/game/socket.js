@@ -3,19 +3,6 @@ var id = null;
 var teacher = false;
 var gameCode = null;
 
-function roomMake(){
-  let nameTmp = document.getElementById('enterName').value;
-  let tmpSet = [
-    {q:"2+2=?",cA:"fish",fA:["4","2","3","1"]},
-    {q:"yes or no",cA:"maybe",fA:["yes","no","si"]},
-    {q:"funny",cA:"funny",fA:["very funny","not funny","this is a test to see how long these should be and what i should set the limit to"]}
-    //{q:"",cA:"",fA:[""]}
-  ];
-  let settingsTmp = {gameType:"matching",rounds:5};
-
-  socket.emit('createRoom',tmpSet,nameTmp,settingsTmp);
-}
-
 function switchName(){
   //document.getElementById("codeE").setAttribute("style","display:none;");
   if(document.getElementById('enterName').value.trim() != ""){
@@ -24,12 +11,6 @@ function switchName(){
   else{
     document.getElementById('enterName').value = "";
     document.getElementById('nameError').setAttribute("style","color:red;");
-  }
-}
-
-function endRoom(){
-  if(teacher){
-    socket.emit('endRoom',gameCode);
   }
 }
 
@@ -43,10 +24,6 @@ function roomJoin(){
     document.getElementById('enterCode').value = "";
     document.getElementById('codeError').setAttribute("style","color:red;");
   }
-}
-
-function startGame(){
-
 }
 
 socket.on('wrongCode',()=> {
@@ -71,9 +48,9 @@ socket.on('joinLobby',(room,id_) => {
   document.getElementById('lobbyScreen').setAttribute("style","");
   id = id_;
   gameCode = room.id;
-  if(id_ == room.teacherId){
-    teacher = true;
-  }
+  //if(id_ == room.teacherId){
+    //teacher = true;
+  //}
   document.getElementById('lobbyCode').innerHTML = room.id;
   document.getElementById('studentLobbyList').innerHTML = "";
   gameType = room.settings.gameType;
