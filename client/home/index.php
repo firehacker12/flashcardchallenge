@@ -165,6 +165,13 @@
         document.getElementById("overlay").setAttribute("style","display: none;");
       }, 500);
     }
+
+    var burger = document.getElementById("burger");
+    var nav = document.getElementById("navbar");
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('is-active');
+      nav.classList.toggle('is-active');
+    });
   </script>
   <style>
     button {
