@@ -43,6 +43,10 @@ socket.on('roomClosed',()=>{
   id = null;
 });
 
+socket.on('startGame', (room) => {
+  document.getElementById("lobbyScreen").setAttribute('style','display:none;');
+});
+
 socket.on('joinLobby',(room,id_) => {
   document.getElementById('joinMake').setAttribute("style","display:none");
   document.getElementById('lobbyScreen').setAttribute("style","");

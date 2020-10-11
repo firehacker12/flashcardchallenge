@@ -30,7 +30,8 @@ var Room = function(setId,teacherName, teacherId,settings){
     teacher:teacherName,
 		teacherId:teacherId,
 		settings:settings,
-		students:[]
+		students:[],
+		gameStarted:false
   }
 
   return self;
@@ -57,14 +58,16 @@ io.sockets.on('connection', function(socket){
   socket.on('joinRoom',(code,name)=> {
 		if(ROOM_LIST[code]){
 			if(ROOM_LIST[code].id == code){
-				ROOM_LIST[code].students.push({name:name,id:socket.id});
-				socket.emit("joinLobby",ROOM_LIST[code],socket.id);
-				STUDENT_LIST[socket.id].room = ROOM_LIST[code].id;
-				SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
-				for(var i=0; i<ROOM_LIST[code].students.length; i++){
-					if(ROOM_LIST[code].students[i]){
-						if(socket.id != ROOM_LIST[code].students[i].id){
-							SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+				if(ROOM_LIST[code].gameStarted == false){
+					ROOM_LIST[code].students.push({name:name,id:socket.id});
+					socket.emit("joinLobby",ROOM_LIST[code],socket.id);
+					STUDENT_LIST[socket.id].room = ROOM_LIST[code].id;
+					SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
+					for(var i=0; i<ROOM_LIST[code].students.length; i++){
+						if(ROOM_LIST[code].students[i]){
+							if(socket.id != ROOM_LIST[code].students[i].id){
+								SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+							}
 						}
 					}
 				}
@@ -74,6 +77,21 @@ io.sockets.on('connection', function(socket){
 			socket.emit('wrongCode');
 		}
   });
+
+	socket.on('startTheGame', () => {
+		if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId == socket.id){
+				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
+					if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i]){
+						SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id].emit('startGame',ROOM_LIST[STUDENT_LIST[socket.id].room]);
+
+				  }
+				}
+				socket.emit('startGame',ROOM_LIST[STUDENT_LIST[socket.id].room]);
+				ROOM_LIST[STUDENT_LIST[socket.id].room].gameStarted = true;
+			}
+		}
+	});
 
 	socket.on('endRoom', (code) => {
 		if(ROOM_LIST[code]){
