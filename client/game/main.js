@@ -9,7 +9,12 @@ var dragging = null;
 var offset = null;
 var timeTaken = 0.00;
 var going = false;
+var preGoing = false;
 var gameType = null;
+var drawing = [];
+var drawColor = {r:0,g:0,b:0};
+var drawUsing = "pen";
+var drawSize = 10;
 
 function setup() {
   createCanvas(800, 800);
@@ -38,11 +43,36 @@ function draw() {
       }
     }
   }
+  if(gameType == "pic"){
+    if(going){
+      //background(220);
+
+    }
+  }
+  if(going != preGoing){
+    preGoing = going;
+    if(gameType == "pic"){
+      drawing.push(new DrawButtons(50,height-100,50,{r:0,g:0,b:0},"c"));
+      drawing.push(new DrawButtons(100,height-100,50,{r:255,g:0,b:0},"c"));
+      drawing.push(new DrawButtons(150,height-100,50,{r:0,g:255,b:0},"c"));
+      drawing.push(new DrawButtons(200,height-100,50,{r:0,g:0,b:255},"c"));
+      drawReset();
+    }
+  }
 }
 
 setInterval(function(){ if(gameType == "matching"){if(going){ timeTaken+=0.01; } }}, 10);
 
-
+function drawReset(){
+  background(220);
+  fill(0);
+  strokeWeight(3);
+  stroke(0);
+  line(0,height-(height/5),width,height-(height/5));
+  for(var i=0; i<drawing.length; i++){
+    drawing[i].show();
+  }
+}
 
 function spawnTiles(tmpSet){
   var randx = random(1,width-(textWidth(tmpSet.q)));
@@ -69,6 +99,21 @@ function mousePressed(){
       }
     }
   }
+  if(gameType == "pic"){
+    if(going){
+      if(mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height-(height/5)){
+        if(drawUsing == "pen"){
+          fill(drawColor.r,drawColor.g,drawColor.b);
+          stroke(drawColor.r,drawColor.g,drawColor.b);
+          ellipse(mouseX,mouseY,drawSize);
+
+        }
+      }
+      for(var i=0; i<drawing.length; i++){
+        drawing[i].click();
+      }
+    }
+  }
 }
 
 function mouseDragged(){
@@ -80,6 +125,17 @@ function mouseDragged(){
             tiles[dragging].x = mouseX-offset.x;
             tiles[dragging].y = mouseY-offset.y;
           }
+        }
+      }
+    }
+  }
+  if(gameType == "pic"){
+    if(going){
+      if(drawUsing == "pen"){
+        if(mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height-(height/5)){
+          fill(drawColor.r,drawColor.g,drawColor.b);
+          stroke(drawColor.r,drawColor.g,drawColor.b);
+          ellipse(mouseX,mouseY,drawSize);
         }
       }
     }
@@ -100,6 +156,32 @@ function mouseReleased(){
 }
 
 
+
+class DrawButtons{
+  constructor(x,y,s,color,does){
+    this.x = x;
+    this.y = y;
+    this.size = s;
+    this.color = color;
+    this.does = does;
+
+  }
+
+  click(){
+    if(dist(this.x,this.y,mouseX,mouseY) < this.size/2){
+      //console.log("e");
+      if(this.does == "c"){
+        drawColor = this.color;
+      }
+    }
+  }
+
+  show(){
+    fill(this.color.r,this.color.g,this.color.b);
+    ellipse(this.x,this.y,this.size);
+  }
+
+}
 
 class Tile{
   constructor(x,y,text,id,matchId){

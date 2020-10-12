@@ -2,6 +2,7 @@ var socket = io(":2000");
 var id = null;
 var teacher = false;
 var gameCode = null;
+var picDrawer = false;
 
 function switchName(){
   //document.getElementById("codeE").setAttribute("style","display:none;");
@@ -45,6 +46,14 @@ socket.on('roomClosed',()=>{
 
 socket.on('startGame', (room) => {
   document.getElementById("lobbyScreen").setAttribute('style','display:none;');
+  if(room.settings.gameType == "pic"){
+    document.getElementById('gameCavas').setAttribute('style',"");
+    if(room.students[0].id == id){
+      picDrawer = true;
+      gameType = "pic";
+      going = true;
+    }
+  }
 });
 
 socket.on('joinLobby',(room,id_) => {

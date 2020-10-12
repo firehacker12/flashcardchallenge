@@ -20,6 +20,7 @@
   <head>
     <title>Home</title>
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link href="../login/style.css" type="text/css" rel="stylesheet" />
@@ -56,34 +57,31 @@
       <br/>
       <br/>
       <strong style="margin-left: 8%;" class="is-size-3 is-block has-text-dark">Set name</strong>
-      <input class="input" type="text" id="setName" placeholder="Unnamed Set" style="margin-left: 8%;width:25%;" maxlength="40" />
+      <input class="input" type="text" id="setName" placeholder="Unnamed Set" style="margin-left: 8%;width:25%;" maxlength="16" />
       <hr style="background-color:rgba(0, 0, 0, .5);"/>
       <div id="questions">
         <!-- Question 1 -->
         <div id="question">
           <div id='questionHide' class="questionHide" onclick="toggleQuestion(0);" style=''>
-            <center><h1 id="questionName" class="is-size-2 has-text-weight-semibold has-text-info">Question 1 <i id="caret" class="fas fa-caret-down"></i></center></h1>
+            <center><h1 class="is-size-2 has-text-weight-semibold has-text-info"><span id="questionName">Unnamed Question</span> <i id="caret" class="fas fa-caret-down"></i></center></h1>
           </div>
           <div id="questionInfo">
             <br/>
-            <center><input class="input" id="setQuestionName" value="Question 1" style="width: 75%;text-align: center;" placeholder="Ask your question here..." /></center>
+            <center><input class="input" id="setQuestionName" value="" style="width: 75%;text-align: center;" placeholder="Ask your question here..." /></center>
             <br/><br/>
             <div id="columns" style="width:100%;display:flex;">
               <div style="border-right: 2px solid rgba(0, 0, 0, .5);width:calc(50% - 2px);margin:0;display:inline-block;">
                 <center><h1 class="is-size-3 has-text-success">Correct Answer <i class="fas fa-check has-text-success"></i></h1></center>
                 <br/>
                 <center>
-                  <textarea id="correctAnswer" style="width:50%;resize: none;text-align: center;" type="text" class="input" maxlength="50">Correct Answer</textarea>
+                  <textarea id="correctAnswer" style="width:50%;resize: none;text-align: center;" type="text" class="input" placeholder="Correct Answer" maxlength="50"></textarea>
                 </center>
               </div><!--
               --><div style="width:calc(50% - 2px);margin:0;display:inline-block;">
                 <center><h1 class="is-size-3 has-text-danger">Incorrect Answers <i class="fas fa-times has-text-danger"></i></h1></center>
                 <br/>
-                <center><div id="answerParent">
-                  <textarea id="incorrectAnswer" style="width:50%;resize: none;text-align: center;" type="text" class="input" maxlength="50">Incorrect Answer</textarea>
-                  <br/><br/>
-                </div></center>
-                <center><button id="addAnswerCorrect" class="button is-large customButton is-link is-outlined" onclick="addAnswer(0);">Add Answer <i class="fas fa-plus" style="margin-left: 10px;margin-top: 2px;"></i></button></center>
+                <center><div id="answerParent"><textarea id="incorrectAnswer" style="width:50%;resize: none;text-align: center;" type="text" class="input" placeholder="Incorrect Answer" maxlength="50"></textarea><br><br></div></center>
+                <center><button id="addAnswerIncorrect" class="button is-large customButton is-link is-outlined" onclick="addAnswer(0);">Add Answer <i class="fas fa-plus" style="margin-left: 10px;margin-top: 2px;"></i></button></center>
               </div>
             </div>
           </div>
@@ -92,45 +90,161 @@
       <br/><br/>
     </div>
     <center><hr style="background-color: black;width:50%;"/></center>
-    <div id="submitForm" style="display:none;" class="popup">
-      <br/>
-      <center><h1 class="is-size-1">Submit Form</h1></center>
-      <br/><br/><br/><br/><br/><br/>
-      <center><p class="is-size-5">Are you sure you are ready to submit?</p></center>
-      <br/>
-      <center><p id="setNameForm" class="is-size-3"><strong></strong>Unnamed Set</p></center>
-      <br/>
-      <center>
-        <button id="addQuestion" class="button is-large customButton is-danger" onclick="exitSubmitForm();" style="margin-right: 7.5px;min-width: 300px;">No, take me back!</button>
-        <button id="addQuestion" class="button is-large customButton is-success" onclick="submitForm();" style="margin-left: 7.5px;min-width: 300px;">Yes, submit it!</button>
-      </center>
+    <div id="dialogue" class='popup' style="display:none;">
+      <div id="submitFormDiv" style="display:none;">
+        <br/>
+        <center><h1 class="is-size-1">Submit Form</h1></center>
+        <br/><br/><br/><br/><br/><br/>
+        <center><p class="is-size-5">Are you sure you are ready to submit?</p></center>
+        <br/>
+        <center><p id="setNameForm" class="is-size-3"><strong></strong>Unnamed Set</p></center>
+        <br/>
+        <center>
+          <button id="exitSubmitForm" class="button is-large customButton is-danger" onclick="hideDialogue();" style="margin-right: 7.5px;min-width: 300px;">No, take me back!</button>
+          <div id="submitFormParent" style="display:inline;">
+            <button id="submitForm" class="button is-large customButton is-success" onclick="submitForm();" style="margin-left: 7.5px;min-width: 300px;">Yes, submit it!</button>
+          </div>
+        </center>
+      </div>
+      <div id="removeQuestionForm" style="display:none;">
+        <br/>
+        <center><h1 class="is-size-1"><strong class="has-text-weight-bold">Remove Question</strong></h1></center>
+        <br/>
+        <center><p class="is-size-3">Are you sure you want to remove this question?</p></center>
+        <center><p class="is-size-6">You can't undo this process</p></center>
+        <br/>
+        <center><p class="is-size-4"><strong id="dialogueQuestion"></strong></p></center>
+        <br/><br/>
+        <center>
+          <button id="exitQuestionDialogue" class="button is-large customButton is-danger" onclick="hideDialogue();" style="margin-right: 7.5px;min-width: 300px;">No, I don't</button>
+          <button id="deleteQuestionButton" class="button is-large customButton is-success" onclick="removeQuestion();" style="margin-left: 7.5px;min-width: 300px;">Yes, delete it</button>
+        </center>
+      </div>
     </div>
-    <div id="overlay" onclick="exitSubmitForm();" style="display:none;"></div>
+    <div id="overlay" onclick="hideDialogue();" style="display:none;"></div>
     <center><button id="addQuestion" class="button is-large customButton is-info is-outlined" onclick="addQuestion();">Add Question <i class="fas fa-plus" style="margin-left: 10px;margin-top: 2px;"></i></button></center>
     <br/>
-    <center><button id="addQuestion" class="button is-large customButton is-warning" onclick="prepareSubmitForm();">Finish set <i class="fas fa-check-square" style="margin-left: 10px;margin-top: 2px;"></i></button></center>
+    <center><button id="finishSet" class="button is-large customButton is-warning" onclick="prepareSubmitForm();">Finish set <i class="fas fa-check-square" style="margin-left: 10px;margin-top: 2px;"></i></button></center>
     <br/><br/>
   </body>
   <script>
+    var questionToRemove = 0;
+
+    function finishSetJSON(){
+
+      var tmpSet = []; //[ {n:"",q:"",cA:"",fA:["",""] } ]
+      if((document.getElementById("setName").value).trim() != ""){
+        for(var i=0; i<document.querySelectorAll("#question").length; i++) {
+          if((document.querySelectorAll("#setQuestionName")[i].value).trim() != ""){
+            document.querySelectorAll("#setQuestionName")[i].setAttribute("style","width: 75%;text-align: center;");
+            //console.log(document.querySelectorAll("#setQuestionName")[i].value);
+            if((document.querySelectorAll("#correctAnswer")[i].value).trim() != ""){
+              //console.log((document.querySelectorAll("#correctAnswer")[i].value).trim());
+              if((document.querySelectorAll("#answerParent")[i].childNodes[0].value).trim() != ""){
+                //console.log(document.querySelectorAll("#answerParent")[i].childNodes[0].value);
+                var fArray = [];
+                for(var f=0; f<document.querySelectorAll("#answerParent")[i].childNodes.length; f+=3){
+                  //console.log(f);
+                  if((document.querySelectorAll("#answerParent")[i].childNodes[f].value).trim() != ""){
+                    fArray.push((document.querySelectorAll("#answerParent")[i].childNodes[f].value).trim());
+                  }
+                }
+                tmpSet.push({author:"<?php echo $Username; ?>",n:(document.getElementById("setName").value).trim(),img:document.querySelectorAll("imagePreview").currentSrc,q:(document.querySelectorAll("#setQuestionName")[i].value).trim(),cA:(document.querySelectorAll("#correctAnswer")[i].value).trim(),fA:fArray});
+              }
+              else{// First false Answer
+                document.getElementById("exitSubmitForm").setAttribute("class","button is-large customButton is-danger");
+                document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success");
+                hideDialogue();
+                showQuestion(i);
+                document.querySelectorAll("#answerParent")[i].childNodes[0].setAttribute("style","width:50%;resize: none;text-align: center;border: 1px solid red;");
+                document.querySelectorAll("#answerParent")[i].childNodes[0].setAttribute("value","");
+                document.querySelectorAll("#answerParent")[i].childNodes[0].setAttribute("placeholder",  "Please fill out this field!");
+                document.querySelectorAll("#answerParent")[i].childNodes[0].focus();
+
+                break;
+              }
+            }
+            else{// Question Answer
+              document.getElementById("exitSubmitForm").setAttribute("class","button is-large customButton is-danger");
+              document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success");
+              hideDialogue();
+              showQuestion(i);
+              document.querySelectorAll("#correctAnswer")[i].setAttribute("style","width:50%;resize: none;text-align: center;border: 1px solid red;");
+              document.querySelectorAll("#correctAnswer")[i].setAttribute("value","");
+              document.querySelectorAll("#correctAnswer")[i].setAttribute("placeholder","Please fill out this field!");
+              document.querySelectorAll("#correctAnswer")[i].focus();
+
+              break;
+            }
+          }
+          else{// Question Name
+            document.getElementById("exitSubmitForm").setAttribute("class","button is-large customButton is-danger");
+            document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success");
+            hideDialogue();
+            showQuestion(i);
+            document.querySelectorAll("#setQuestionName")[i].setAttribute("style","width: 75%;text-align: center;border: 1px solid red;");
+            document.querySelectorAll("#setQuestionName")[i].setAttribute("value","");
+            document.querySelectorAll("#setQuestionName")[i].setAttribute("placeholder","Please fill out this field!");
+            document.querySelectorAll("#setQuestionName")[i].focus();
+
+            break;
+          }
+        }
+      }
+      else{
+        document.getElementById("exitSubmitForm").setAttribute("class","button is-large customButton is-danger");
+        document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success");
+        hideDialogue();
+        document.getElementById("setName").setAttribute("style","margin-left: 8%;width:25%;border: 1px solid red;");
+        document.getElementById("setName").setAttribute("value","");
+        document.getElementById("setName").setAttribute("placeholder","Please fill out this field!");
+        document.getElementById("setName").focus();
+
+      }
+
+      if(tmpSet.length > 0) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 3 && this.status == 200) {
+            //good
+            if (xhttp.responseText == "Success") {
+              //Success
+              document.getElementById("exitSubmitForm").setAttribute("style","display: none;");
+              document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success");
+              document.getElementById("setNameForm").innerHTML += "<br/><br/>Submitted!";
+              document.getElementById("submitFormParent").innerHTML = "<a href='../home'><button id='submitForm' class='button is-large customButton is-success' style='margin-left: 7.5px;min-width: 300px;'>Home</button></a>";
+              document.getElementById("overlay").setAttribute("onclick","");
+            }
+            else if (xhttp.responseText == "Error") {
+              document.getElementById("exitSubmitForm").setAttribute("class","button is-large customButton is-danger");
+              document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success");
+              document.getElementById("setNameForm").innerHTML += "<br/><br/>An error occured. Please try again later!";
+              document.getElementById("exitSubmitForm").innerHTML = "Go back";
+              document.getElementById("submitForm").innerHTML = "Try Again";
+            }
+          }
+        }
+        xhttp.open("POST", "sendquiz.php", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.send("QuizJSON="+JSON.stringify(tmpSet)+"&QuizName="+document.querySelectorAll("#setName")[0].value);
+      }
+    }
+
     function prepareSubmitForm() {
-      document.getElementById("submitForm").setAttribute("style","animation: showPopup .35s;animation-fill-mode: forwards;");
-      document.getElementById("overlay").setAttribute("style","animation: showPopupOverlay .35s;animation-fill-mode: forwards;");
+      document.getElementById("submitFormDiv").setAttribute("style","");
+      document.getElementById("removeQuestionForm").setAttribute("style","display:none;");
       if (document.getElementById("setName").value.length < 1) {
         document.getElementById("setNameForm").innerHTML = "Unnamed Set";
       }
       else {
         document.getElementById("setNameForm").innerHTML = document.getElementById("setName").value;
       }
-    }
-    function exitSubmitForm() {
-      document.getElementById("submitForm").setAttribute("style","animation: hidePopup .35s;animation-fill-mode: forwards;");
-      document.getElementById("overlay").setAttribute("style","animation: hidePopupOverlay .35s;animation-fill-mode: forwards;");
-      setTimeout(() => {
-        document.getElementById("overlay").setAttribute("style","display:none;");
-      }, 350);
+      showDialogue();
     }
     function submitForm() {
-
+      document.getElementById("exitSubmitForm").setAttribute("class","button is-large customButton is-danger is-loading");
+      document.getElementById("submitForm").setAttribute("class","button is-large customButton is-success is-loading");
+      finishSetJSON();
     }
     function addAnswer(index) {
       var element = document.createElement("textarea");
@@ -151,15 +265,51 @@
       var questionLength = document.querySelectorAll("#question").length+1;
       var questionNode = document.createElement("div");
       questionNode.setAttribute("id","question");
-      var questionHTML = "<div id='questionHide' class='questionHide' onclick='toggleQuestion("+(questionLength-1)+");' style=''><center><h1 id='questionName' class='is-size-2 has-text-weight-semibold has-text-info'>Question "+(questionLength)+"<i id='caret' class='fas fa-caret-down'></i></center></h1></div><div id='questionInfo'><br/><center><input id='setQuestionName' value='Question "+(questionLength)+"'  class='input' style='width: 75%;text-align: center;' placeholder='Ask your question here...' /></center><br/><br/><div id='columns' style='width:100%;display:flex;'><div style='border-right: 2px solid rgba(0, 0, 0, .5);width:calc(50% - 2px);margin:0;display:inline-block;'><center><h1 class='is-size-3 has-text-success'>Correct Answer <i class='fas fa-check has-text-success'></i></h1></center><br/><center><textarea id='correctAnswer' style='width:50%;resize: none;text-align: center;' type='text' class='input' maxlength='50'>Correct Answer</textarea></center></div><!----><div style='width:calc(50% - 2px);margin:0;display:inline-block;'><center><h1 class='is-size-3 has-text-danger'>Incorrect Answers <i class='fas fa-times has-text-danger'></i></h1></center><br/><center><div id='answerParent'><textarea id='incorrectAnswer' style='width:50%;resize: none;text-align: center;' type='text' class='input' maxlength='50'>Incorrect Answer</textarea><br/><br/></div></center><center><button id='addAnswerCorrect' class='button is-large customButton is-link is-outlined' onclick='addAnswer("+(questionLength-1)+");'>Add Answer <i class='fas fa-plus' style='margin-left: 10px;margin-top: 2px;'></i></button></center></div></div><br/><center><button id='addAnswerCorrect' class='button is-large is-danger' onclick='removeQuestion("+questionLength+");'>Remove Question <i class='fas fa-trash-alt' style='margin-left: 10px;margin-top: 2px;'></i></button></center><br/></div>";
+      var questionHTML = "<hr style='margin:0;padding:0;background-color:white;'/><div id='questionHide' class='questionHide' onclick='toggleQuestion("+(questionLength-1)+");' style=''><center><h1 class='is-size-2 has-text-weight-semibold has-text-info'><span id='questionName'>Unnamed Question</span> <i id='caret' class='fas fa-caret-down'></i></center></h1></div><div id='questionInfo'><br/><center><input id='setQuestionName' value=''  class='input' style='width: 75%;text-align: center;' placeholder='Ask your question here...' /></center><br/><br/><div id='columns' style='width:100%;display:flex;'><div style='border-right: 2px solid rgba(0, 0, 0, .5);width:calc(50% - 2px);margin:0;display:inline-block;'><center><h1 class='is-size-3 has-text-success'>Correct Answer <i class='fas fa-check has-text-success'></i></h1></center><br/><center><textarea id='correctAnswer' style='width:50%;resize: none;text-align: center;' type='text' class='input' maxlength='50' placeholder='Correct Answer'></textarea></center></div><!----><div style='width:calc(50% - 2px);margin:0;display:inline-block;'><center><h1 class='is-size-3 has-text-danger'>Incorrect Answers <i class='fas fa-times has-text-danger'></i></h1></center><br/><center><div id='answerParent'><textarea id='incorrectAnswer' style='width:50%;resize: none;text-align: center;' type='text' class='input' maxlength='50' placeholder='Incorrect Answer'></textarea><br/><br/></div></center><center><button id='addAnswerIncorrect' class='button is-large customButton is-link is-outlined' onclick='addAnswer("+(questionLength-1)+");'>Add Answer <i class='fas fa-plus' style='margin-left: 10px;margin-top: 2px;'></i></button></center></div></div><br/><center><button id='removeQuestionButton' class='button is-large is-danger' onclick='promptRemoveQuestion("+questionLength+");questionToRemove="+questionLength+"'>Remove Question <i class='fas fa-trash-alt' style='margin-left: 10px;margin-top: 2px;'></i></button><br/>";
       questionNode.innerHTML = questionHTML;
       //document.getElementById("questions").innerHTML += questionHTML;
       var hr = document.createElement("hr");
       hr.setAttribute("style","margin:0;padding:0;");
-      document.getElementById("questions").appendChild(hr);
+      //document.getElementById("questions").appendChild(hr);
       document.getElementById("questions").appendChild(questionNode);
 
       hideQuestion(questionLength-2);
+    }
+
+    function showDialogue() {
+      document.getElementById("overlay").setAttribute("style","animation: showPopupOverlay .35s;animation-fill-mode: forwards;");
+      document.getElementById("dialogue").setAttribute("style","animation: showPopup .35s;animation-fill-mode: forwards;");
+    }
+
+    function hideDialogue() {
+      document.getElementById("overlay").setAttribute("style","animation: hidePopupOverlay .35s;animation-fill-mode: forwards;");
+      document.getElementById("dialogue").setAttribute("style","animation: hidePopup .35s;animation-fill-mode: forwards;");
+      setTimeout(() => {
+        document.getElementById("overlay").setAttribute("style","display:none;");
+      }, 350);
+    }
+
+    function promptRemoveQuestion(index) {
+      document.getElementById("removeQuestionForm").setAttribute("style","");
+      document.getElementById("submitFormDiv").setAttribute("style","display:none;");
+      document.getElementById("dialogueQuestion").innerHTML = document.querySelectorAll("#questionName")[index-1].childNodes[0].textContent;
+      showDialogue();
+    }
+
+    function removeQuestion(index) {
+      document.querySelectorAll("#question")[questionToRemove-1].remove();
+      var sortedChildren = [];
+      for (var i=0; i<document.getElementById("questions").childNodes.length; i++) {
+        if (document.getElementById("questions").childNodes[i].nodeType == 1) sortedChildren.push(document.getElementById("questions").childNodes[i]);
+      }
+      for (var i=questionToRemove-1; i<sortedChildren.length; i++) {
+        sortedChildren[i].childNodes[1].setAttribute("onclick","toggleQuestion("+i+");");
+        document.querySelectorAll("#addAnswerIncorrect")[i].setAttribute("onclick","addAnswer("+i+");");
+        document.querySelectorAll("#removeQuestionButton")[i-1].setAttribute("onclick","promptRemoveQuestion("+(i+1)+");questionToRemove="+(i+1));
+
+
+      }
+      hideDialogue();
     }
 
     function showQuestion(index) {
@@ -170,7 +320,7 @@
 
     function hideQuestion(index) {
       document.querySelectorAll("#questionInfo")[index].setAttribute("style","display:none;");
-      document.querySelectorAll("#questionHide")[index].setAttribute("style","");
+      //document.querySelectorAll("#questionHide")[index].setAttribute("style","");
       document.querySelectorAll("#caret")[index].setAttribute("class", "fas fa-caret-down rotated");
     }
 
@@ -186,9 +336,12 @@
     setInterval(() => {
       //Question name update
       for (var i=0; i<document.querySelectorAll("#setQuestionName").length; i++) {
-        //document.querySelectorAll("#questionName")[i].childNodes[0].textContent = document.querySelectorAll("#setName")[i].value;
-        document.querySelectorAll("#questionName")[i].childNodes[0].textContent = document.querySelectorAll("#setQuestionName")[i].value + " ";
-        //console.log(document.querySelectorAll("#setQuestionName")[i].value);
+        if (document.querySelectorAll("#setQuestionName")[i].value == "") {
+          document.querySelectorAll("#questionName")[i].innerHTML = "Unnamed Question";
+        }
+        else {
+          document.querySelectorAll("#questionName")[i].innerHTML = document.querySelectorAll("#setQuestionName")[i].value;
+        }
       }
     }, 100);
 
