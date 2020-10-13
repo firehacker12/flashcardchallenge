@@ -1,7 +1,11 @@
 var socket = io(":2000");
 var id = null;
-var teacher = false;
+var teacher = true;
 var gameCode = null;
+var game = null;
+var quickQuestionNum = 0;
+var mySet = null;
+var mySettings = null;
 
 function roomMake(gameType) {
   if (currentSelected != null) {
@@ -20,7 +24,29 @@ function roomMake(gameType) {
         }
       }
     }
-    console.log(nameTmp);
+    //console.log(nameTmp);
+    let settingsTmp = {gameType:gameType,rounds:0};
+    var gameTypeString;
+    switch(gameType) {
+      case "pic":
+        gameTypeString = "Pictionary";
+        break;
+      case "matching":
+        gameTypeString = "Matching Game";
+        break;
+      case "flash":
+        gameTypeString = "Flashcards";
+        break;
+      case "quick":
+        gameTypeString = "Quick Quizes"
+        settingsTmp.rounds = document.getElementById("quickTime").value;
+        break;
+      case "test":
+        gameTypeString = "Test";
+        break;
+
+    }
+    document.getElementById("gameTypeStrong").innerHTML = gameTypeString;
     //let nameTmp = "tmp name";
     let tmpSet = [
       {q:"2+2=?",cA:"fish",fA:["4","2","3","1"]},
@@ -28,14 +54,23 @@ function roomMake(gameType) {
       {q:"funny",cA:"funny",fA:["very funny","not funny","this is a test to see how long these should be and what i should set the limit to"]}
       //{q:"",cA:"",fA:[""]}
     ];
-    let settingsTmp = {gameType:gameType,rounds:5};
 
     socket.emit('createRoom',tmpSet,nameTmp,settingsTmp);
   }
 }
 
 function startGame(){
-  socket.emit("startTheGame");
+  if (teacher) {
+    if (currentType == 0){
+      //My Quizzes
+      mySet = JSON.parse(myQuizzes[currentNumber]);
+    }
+    else {
+      //Other quizzes
+      mySet = JSON.parse(otherQuizzes[currentNumber]);
+    }
+    socket.emit("startTheGame");
+  }
 }
 
 function endRoom(){
@@ -44,9 +79,34 @@ function endRoom(){
   }
 }
 
+socket.on('roomClosed', () => {
+  location.reload();
+});
+
 socket.on('startGame', (room) => {
   document.getElementById("lobbyRoom").setAttribute('style','display:none;');
+  game = room.settings.gameType;
+
+  console.log(mySet);
+  switch(room.settings.gameType) {
+    case "test":
+      setupTest(mySet);
+      break;
+  }
+  mySettings = room.settings;
+  if(game == "quick"){
+    quickQuestionNum = 0;
+    quickQuestion();
+  }
 });
+
+function setupTest(set) {
+  socket.emit('sendQuestionsTest',set);
+}
+
+function quickQuestion(){
+  socket.emit('askQuickQuestion',mySet[quickQuestionNum],mySettings);
+}
 
 socket.on('joinLobby',(room,id_) => {
   document.getElementById('mainHome').setAttribute("style","display:none");
@@ -73,6 +133,8 @@ socket.on('updateLobby',(room) => {
   //document.getElementById('lobbyCode').innerHTML = room.id;
   //document.getElementById('lobbyWaitStudentList').innerHTML = "";
   document.getElementById("startTheRoom").removeAttribute("disabled");
+  console.log(room.students.length);
+  if (room.students.length == 0) document.getElementById("startTheRoom").setAttribute("disabled", "true");
   document.getElementById('lobbyColumn1').innerHTML = "";
   document.getElementById('lobbyColumn2').innerHTML = "";
   document.getElementById('lobbyColumn3').innerHTML = "";

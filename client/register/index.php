@@ -22,6 +22,7 @@
     <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link href="style.css" type="text/css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
   </head>
   <body>

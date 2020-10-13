@@ -7,6 +7,8 @@
     $QuizName = $_POST['QuizName'];
     $Author = $_SESSION['Username'];
 
+    //echo $QuizJSON . " " . $QuizName . " " . $Author;
+
     $query = "INSERT INTO quizzes (Name, QuizDataJSON, Author) VALUES ('$QuizName', '$QuizJSON', '$Author')";
 
     $response = @mysqli_query($conn, $query);

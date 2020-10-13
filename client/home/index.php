@@ -19,6 +19,7 @@
   <head>
     <title>Home</title>
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
@@ -172,25 +173,157 @@
         <div id="popup2" class="popup" style="">
           <br/>
           <center><h1 class="is-size-1">Quick Quiz</h1></center>
+          <br/>
+          <span style="margin-left: 12.5%"></span><strong class="is-size-3">Settings</strong>
+          <hr/>
+          <br/>
+          <div style="width:75%;position:relative;left:12.5%;">
+            <div class="columns">
+              <div class="column">
+                <p class="is-size-5">Time to Answer</p>
+                <select class="select" id="quickTime">
+                  <option>5 Seconds</option>
+                  <option>10 Seconds</option>
+                  <option>30 Seconds</option>
+                  <option>45 Seconds</option>
+                  <option>60 Seconds</option>
+                  <option>120 Seconds</option>
+                </select>
+                <br/><br/>
+                <p class="is-size-5">Room Name</p>
+                <input id="roomname1" class="input" placeholder="My Room" />
+                <strong class="is-size-6 has-text-grey">*Optional</strong>
+              </div>
+              <div class="column">
+
+              </div>
+            </div>
+            <br/>
+          </div>
+          <span style="margin-left: 12.5%"></span><strong class="is-size-3">Search</strong>
+          <hr/>
+          <div style="width:75%;position:relative;left:12.5%;">
+            <div style="margin-bottom: 5px;display:flex;">
+              <p class="is-size-6 has-text-weight-semibold is-inline" style="align-self: center;padding-right: 10px;">Search For Quizzes</p>
+              <select class="select selectSearch" onchange="changedSearch(this);">
+                <option>My Quizzes</option>
+                <option>All Quizzes</option>
+              </select>
+            </div>
+            <input class="input" id="search" placeholder="Steve Jobs, United States, Algebra, Etc" />
+            <br/>
+            <div style="overflow-x: scroll;height:15vh;white-space: nowrap;overflow-y: hidden;" id="previewImages"></div>
+            <center>
+              <a href="../createquiz"><button class="button notmoving is-medium is-warning">Create A Quiz</button></a>
+              <button class="button notmoving is-medium is-danger" disabled id="startButton" onclick="roomMake('quick');">Create Room</button>
+            </center>
+            </center>
+          </div>
         </div>
         <div id="popup3" class="popup" style="">
           <br/>
           <center><h1 class="is-size-1">Matching</h1></center>
+          <br/>
+          <span style="margin-left: 12.5%"></span><strong class="is-size-3">Settings</strong>
+          <hr/>
+          <br/>
+          <div style="width:75%;position:relative;left:12.5%;">
+            <div class="columns">
+              <div class="column">
+                <p class="is-size-5">Time to draw</p>
+                <select class="select">
+                  <option>30 seconds</option>
+                  <option>60 seconds</option>
+                  <option>90 seconds</option>
+                  <option>120 seconds</option>
+                </select>
+                <br/><br/>
+                <p class="is-size-5">Room Name</p>
+                <input id="roomname1" class="input" placeholder="My Room" />
+                <strong class="is-size-6 has-text-grey">*Optional</strong>
+              </div>
+              <div class="column">
+                <p class="is-size-5">Rounds</p>
+                <select class="select">
+                  <option>1</option>
+                  <option>3</option>
+                  <option>5</option>
+                  <option>Custom</option>
+                </select>
+              </div>
+            </div>
+            <br/>
+          </div>
+          <span style="margin-left: 12.5%"></span><strong class="is-size-3">Search</strong>
+          <hr/>
+          <div style="width:75%;position:relative;left:12.5%;">
+            <div style="margin-bottom: 5px;display:flex;">
+              <p class="is-size-6 has-text-weight-semibold is-inline" style="align-self: center;padding-right: 10px;">Search For Quizzes</p>
+              <select class="select selectSearch" onchange="changedSearch(this);">
+                <option>My Quizzes</option>
+                <option>All Quizzes</option>
+              </select>
+            </div>
+            <input class="input" id="search" placeholder="Steve Jobs, United States, Algebra, Etc" />
+            <br/>
+            <div style="overflow-x: scroll;height:15vh;white-space: nowrap;overflow-y: hidden;" id="previewImages"></div>
+            <center>
+              <a href="../createquiz"><button class="button notmoving is-medium is-warning">Create A Quiz</button></a>
+              <button class="button notmoving is-medium is-danger" disabled id="startButton" onclick="roomMake('matching');">Create Room</button>
+            </center>
+            </center>
+          </div>
         </div>
         <div id="popup4" class="popup" style="">
           <br/>
           <center><h1 class="is-size-1">Test</h1></center>
+          <br/>
+          <span style="margin-left: 12.5%"></span><strong class="is-size-3">Settings</strong>
+          <hr/>
+          <br/>
+          <div style="width:75%;position:relative;left:12.5%;">
+            <div class="columns">
+              <div class="column">
+                <br/>
+                <p class="is-size-5">Room Name</p>
+                <input id="roomname1" class="input" placeholder="My Room" />
+                <strong class="is-size-6 has-text-grey">*Optional</strong>
+                <br/>
+              </div>
+            </div>
+            <br/>
+          </div>
+          <span style="margin-left: 12.5%"></span><strong class="is-size-3">Search</strong>
+          <hr/>
+          <div style="width:75%;position:relative;left:12.5%;">
+            <div style="margin-bottom: 5px;display:flex;">
+              <p class="is-size-6 has-text-weight-semibold is-inline" style="align-self: center;padding-right: 10px;">Search For Quizzes</p>
+              <select class="select selectSearch" onchange="changedSearch(this);">
+                <option>My Quizzes</option>
+                <option>All Quizzes</option>
+              </select>
+            </div>
+            <input class="input" id="search" placeholder="Steve Jobs, United States, Algebra, Etc" />
+            <br/>
+            <div style="overflow-x: scroll;height:15vh;white-space: nowrap;overflow-y: hidden;" id="previewImages"></div>
+            <center>
+              <a href="../createquiz"><button class="button notmoving is-medium is-warning">Create A Quiz</button></a>
+              <button class="button notmoving is-medium is-danger" disabled id="startButton" onclick="roomMake('test');">Create Room</button>
+            </center>
+            </center>
+          </div>
         </div>
       </div>
       <div id="overlay" style="display:none;" onclick="hidePopup();"></div>
       <span style="display:none;" id="teacherName"><?php echo $Username; ?></span>
     </div>
     <div id="lobbyRoom" style="display:none;">
-      <br/><br/><br/>
+      <br/>
       <center>
-      <h1  class="is-size-1">Student Waiting Room</h1>
+      <h1  class="is-size-1 has-text-link">Student Waiting Room</h1>
+      <h1 class="is-size-5 has-text-link" id="gameTypeStrong"></h1>
       <br>
-      <h1  class="is-size-4" id="lobbyCodeDisplay" >Code: </h1>
+      <h1  class="is-size-4 has-text-info" id="lobbyCodeDisplay" >Code: </h1>
       <hr style="border:1px solid black;">
       <br>
       <button class="button notmoving is-medium is-primary" onclick="startGame();" disabled style="position:absolute; right: 40px;top:60px;" id="startTheRoom" >Start Room</button>
@@ -278,7 +411,7 @@
             var elem_ = document.createElement("div");
             elem_.setAttribute("style","background-color: rgb("+floor(random(0, 200))+", "+floor(random(0, 200))+", "+floor(random(0, 200))+");");
             elem_.setAttribute("class","previewImage");
-            elem_.setAttribute("onclick", "selectPreview(this, this.parentElement);");
+            elem_.setAttribute("onclick", "selectPreview(this, this.parentElement, 0, "+i+");");
             elem_.innerHTML = "<center><p class='has-text-white is-size-4' style='margin-top: 15px;line-height: 4vh;text-shadow: 0px 0px 2px black;'>"+jsonSet[0].n+"</p></center><center><p class='has-text-white is-size-4'>By: "+jsonSet[0].author+"</p></center>";
             parentElement.appendChild(elem_);
           }
@@ -292,7 +425,7 @@
             var elem_ = document.createElement("div");
             elem_.setAttribute("style","background-color: rgb("+floor(random(0, 200))+", "+floor(random(0, 200))+", "+floor(random(0, 200))+");");
             elem_.setAttribute("class","previewImage");
-            elem_.setAttribute("onclick", "selectPreview(this, this.parentElement);");
+            elem_.setAttribute("onclick", "selectPreview(this, this.parentElement, 1, "+i+");");
             elem_.innerHTML = "<center><p class='has-text-white is-size-4' style='margin-top: 15px;line-height: 4vh;text-shadow: 0px 0px 2px black;'>"+jsonSet[0].n+"</p></center><center><p class='has-text-white is-size-4'>By: "+jsonSet[0].author+"</p></center>";
             parentElement.appendChild(elem_);
           }
@@ -339,6 +472,7 @@
 
     var myQuizzes;
     var otherQuizzes;
+    var selectedQuizIndex = 0;
 
     function showGames(info) {
       var info_ = info.substring(0, info.length-1);
@@ -359,7 +493,7 @@
             var elem = document.createElement("div");
             elem.setAttribute("style","background-color: rgb("+floor(random(0, 200))+", "+floor(random(0, 200))+", "+floor(random(0, 200))+");");
             elem.setAttribute("class","previewImage");
-            elem.setAttribute("onclick", "selectPreview(this, this.parentElement);");
+            elem.setAttribute("onclick", "selectPreview(this, this.parentElement, 0, "+i+");");
             elem.innerHTML = "<center><p class='has-text-white is-size-4' style='margin-top: 15px;line-height: 4vh;text-shadow: 0px 0px 2px black;'>"+jsonSet[0].n+"</p></center><center><p class='has-text-white is-size-4'>By: "+jsonSet[0].author+"</p></center>";
             parentElement[j].appendChild(elem);
           }
@@ -381,8 +515,10 @@
     }
 
     var currentSelected = null;
+    var currentType = 0;
+    var currentNumber = 0;
 
-    function selectPreview(elem, elemParent) {
+    function selectPreview(elem, elemParent, type, number) {
       var index = undefined;
       for (var i=0; i<document.querySelectorAll("#previewImages").length; i++) {
         if (document.querySelectorAll("#previewImages")[i] == elemParent) {
@@ -400,6 +536,9 @@
         document.querySelectorAll("#startButton")[index].removeAttribute("disabled");
         //var styling = currentSelected.getAttribute("style");
         currentSelected = elem;
+        currentType = type;
+        currentNumber = number;
+        selectedQuizIndex = index;
       }
     }
 

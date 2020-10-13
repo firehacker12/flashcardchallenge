@@ -78,7 +78,7 @@ io.sockets.on('connection', function(socket){
 		}
   });
 
-	socket.on('startTheGame', () => {
+	socket.on('startTheGame', (info) => {
 		if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
 			if(ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId == socket.id){
 				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
@@ -93,17 +93,49 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 
+	socket.on('sendQuestionsTest', (set) => {
+		if(STUDENT_LIST[socket.id]){
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+				var room = STUDENT_LIST[socket.id].room;
+				for(var i=0; i<ROOM_LIST[room].students.length; i++){
+					if(ROOM_LIST[room].students){
+						SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('receiveQuestionsTest',set);
+					}
+				}
+			}
+		}
+	});
+
+	socket.on('answerToQuestion', (questionNumber, answer) => {
+		SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId].emit('studentSentQuestion', questionNumber, answer);
+	});
+
+	socket.on('askQuickQuestion',(setQuestion,settings) => {
+		if(STUDENT_LIST[socket.id]){
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+				var room = STUDENT_LIST[socket.id].room;
+				for(var i=0; i<ROOM_LIST[room].students.length; i++){
+					if(ROOM_LIST[room].students){
+						SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('answerQuickQuestion',setQuestion,settings);
+					}
+				}
+			}
+		}
+	});
+
 	socket.on('endRoom', (code) => {
 		if(ROOM_LIST[code]){
 			if(ROOM_LIST[code].teacherId == socket.id){
 				for(var i=0; i<ROOM_LIST[code].students.length; i++){
 					if(ROOM_LIST[code].students[i]){
 						SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('roomClosed');
-						STUDENT_LIST[ROOM_LIST[code].students[i].id].room = tmpRoom.id;
+						STUDENT_LIST[ROOM_LIST[code].students[i].id].room = null;
 				  }
 				}
 				socket.emit('roomClosed');
-				STUDENT_LIST[socket.id].room = tmpRoom.id;
+				STUDENT_LIST[socket.id].room = null;
+				delete ROOM_LIST[code];
+				ROOM_LIST = cleanArray(ROOM_LIST);
 			}
 		}
 	});
@@ -112,17 +144,34 @@ io.sockets.on('connection', function(socket){
 		if(STUDENT_LIST[socket.id].room != null){
 			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
 				var room = STUDENT_LIST[socket.id].room;
-				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
-					if (exists(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i])) {
-						if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id == socket.id){
-						 	delete ROOM_LIST[STUDENT_LIST[socket.id].room].students[i];
-							for(var i=0; i<ROOM_LIST[room].students.length; i++){
-								if(ROOM_LIST[room].students[i]){
-									SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room]);
+				if(socket.id == ROOM_LIST[room].teacherId){
+					console.log("yes");
+					for(var i=0; i<ROOM_LIST[room].students.length; i++){
+						if(ROOM_LIST[room].students[i]){
+							SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('roomClosed');
+							STUDENT_LIST[ROOM_LIST[room].students[i].id].room = null;
+					  }
+					}
+					socket.emit('roomClosed');
+					STUDENT_LIST[socket.id].room = null;
+					delete ROOM_LIST[room];
+					ROOM_LIST = cleanArray(ROOM_LIST);
+				}
+
+				else{
+					for(var i=0; i<ROOM_LIST[room].students.length; i++){
+						if (exists(ROOM_LIST[room].students[i])) {
+							if(ROOM_LIST[room].students[i].id == socket.id){
+							 	delete ROOM_LIST[room].students[i];
+								ROOM_LIST[room].students = cleanArray(ROOM_LIST[room].students);
+								for(var i=0; i<ROOM_LIST[room].students.length; i++){
+									if(ROOM_LIST[room].students[i]){
+										SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room]);
+									}
 								}
+								SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room])
+								break;
 							}
-							SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room])
-							break;
 						}
 					}
 				}

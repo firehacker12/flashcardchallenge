@@ -3,6 +3,8 @@ var id = null;
 var teacher = false;
 var gameCode = null;
 var picDrawer = false;
+var mySet;
+var studentAnswers = [];
 
 function switchName(){
   //document.getElementById("codeE").setAttribute("style","display:none;");
@@ -27,32 +29,50 @@ function roomJoin(){
   }
 }
 
+socket.on('receiveQuestionsTest', (set) => {
+  mySet = set;
+  setupTest(mySet);
+});
+
+socket.on('studentSentQuestion', (questionNumber, answer) => {
+
+});
+
 socket.on('wrongCode',()=> {
   document.getElementById('enterCode').value = "";
   document.getElementById('codeError').setAttribute("style","color:red;");
+});
+
+socket.on('answerQuickQuestion', (tmpSet,settings) => {
+  //console.log(tmpSet.q);
+  document.getElementById('quickQuiz').setAttribute('style','');
+
 });
 
 socket.on('testCode',(code) => {
   console.log(code);
 });
 
-socket.on('roomClosed',()=>{
-  document.getElementById('joinMake').setAttribute("style","");
-  document.getElementById('lobbyScreen').setAttribute("style","display:none");
-  gameCode = false;
-  teacher = false;
-  id = null;
+socket.on('roomClosed', () => {
+  location.reload();
 });
 
 socket.on('startGame', (room) => {
   document.getElementById("lobbyScreen").setAttribute('style','display:none;');
-  if(room.settings.gameType == "pic"){
-    document.getElementById('gameCavas').setAttribute('style',"");
-    if(room.students[0].id == id){
-      picDrawer = true;
-      gameType = "pic";
-      going = true;
-    }
+  console.log(room.settings.gameType);
+  switch(room.settings.gameType) {
+    case "pic":
+      document.getElementById('gameCavas').setAttribute('style',"");
+      if(room.students[0].id == id){
+        picDrawer = true;
+        gameType = room.settings.gameType;
+        going = true;
+      }
+      break;
+    case "test":
+      //console.log(mySet);
+      //setupTest(mySet);
+      break;
   }
 });
 
@@ -79,7 +99,7 @@ socket.on('updateLobby',(room) => {
   document.getElementById('studentLobbyList').innerHTML = "";
   for(var i=0; i<room.students.length; i++){
     if(room.students[i]){
-      document.getElementById('studentLobbyList').innerHTML += "<p1>"+room.students[i].name+"</p1><br>";
+      document.getElementById('studentLobbyList').innerHTML += "<p1>"+room.students[i].name+"</p1><br><br>";
     }
   }
 });

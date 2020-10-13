@@ -4,12 +4,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
   </head>
   <body>
     <center>
-      <div id='joinMake'>
+      <div id='joinMake' style="display:none; ">
         <br>
         <h1 style="font-family: 'Permanent Marker', cursive;font-size:4em;">Quizzard</h1>
 
@@ -38,7 +40,95 @@
         <script src="main.js"></script>
       </div>
 
+      <div id="quickQuiz" style=";">
+          <center>
+          <h1  class="is-size-1 has-text-black">Student Waiting Room</h1>
+          <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
+          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right; border:1px solid black;border-radius: 50px; background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1>
+          <hr style="border:1px solid black;">
+          <br>
+          <h1  class="is-size-3 has-text-black" id="quickQuestionShowed" style="" >Question 1</h1>
+          <hr style="border:1px solid grey;">
+          <div id="quickQuestionHolder"></div>
+        </center>
+      </div>
+
+      <div id="test" style="display:none;">
+        <div id="finishedDiv" style="display:none;">
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+          <center><h1 class="is-size-1">You Finished Your Test!</h1></center>
+          <center><h1 class="is-size-3">Please wait for your teacher</h1></center>
+        </div>
+      </div>
+
 
       </center>
   </body>
+  <script>
+    function submitQuestion(index) {
+      if (mySet) {
+        for (var i=0; i<mySet[index].fA.length+1; i++) {
+          if (document.getElementById("question1answer"+i).checked) {
+            console.log(index, document.getElementById('question1label'+i).textContent.substring(3, document.getElementById('question1label'+i).textContent.length));
+            document.getElementById("question"+(index+1)).setAttribute("style","display:none;flex-direction: column; width:65%;");
+            if (document.getElementById("question"+(index+2)) != undefined) {
+              document.getElementById("question"+(index+2)).setAttribute("style","display:flex;flex-direction:column; width: 65%;");
+            }
+            else {
+              document.getElementById("finishedDiv").setAttribute("style","");
+            }
+            socket.emit('answerToQuestion', index, document.getElementById('question1label'+i).textContent.substring(3, document.getElementById('question1label'+i).textContent.length));
+            break;
+          }
+        }
+      }
+    }
+
+    function setupTest(currentSet) {
+      var testElement = document.getElementById("test");
+      testElement.setAttribute("style","");
+      var alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+      for (var i=0; i<currentSet.length; i++) {
+        var elem = document.createElement("div");
+        elem.setAttribute("id","question"+(i+1));
+        if (i==0) {
+          elem.setAttribute("style","display:flex;flex-direction: column;width:65%;");
+        }
+        else {
+          elem.setAttribute("style","display:none;flex-direction: column;width:65%;");
+        }
+        elem.innerHTML += "<br/><p>"+(i+1)+"/"+(currentSet.length)+"</p><br/>";
+        elem.innerHTML += "<h1 style='text-align: middle;' class='is-size-1'>"+(i+1)+". "+currentSet[i].q+"</h1>";
+        var randomCorrect = floor(random(0, currentSet[i].fA.length));
+        var currentLetterIndex = 0;
+        var answerIndex = 0;
+        for (var j=0; j<currentSet[i].fA.length; j++) {
+          if (j == randomCorrect) {
+            if (random() < .5) {
+              var correctHTML = "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div>";
+              elem.innerHTML += correctHTML;
+              currentLetterIndex++;
+              answerIndex++;
+              elem.innerHTML += "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div>";
+            }
+            else {
+              elem.innerHTML += "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div>";
+              currentLetterIndex++;
+              answerIndex++;
+              var correctHTML = "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div>";
+              elem.innerHTML += correctHTML;
+            }
+          }
+          else {
+            elem.innerHTML += "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div>";
+          }
+          answerIndex++;
+          currentLetterIndex++;
+        }
+        elem.innerHTML += "<br/>";
+        elem.innerHTML += "<center><button class='button is-primary' onclick='submitQuestion("+i+");'>Next Question</button></center>";
+        testElement.appendChild(elem);
+      }
+    }
+  </script>
 </html>

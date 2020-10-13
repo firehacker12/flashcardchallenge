@@ -1,6 +1,7 @@
 body{
   margin:0;
-  background-color: rgba(0,132,234,1);
+  //background-color: rgba(0,132,234,1);
+  background-color: rgb(240, 240, 240);
   user-select: none;
 
 }
