@@ -135,10 +135,10 @@
       var finalLetter;
       switch(letter) {
         case '"':
-          finalLetter = '\\"';
+          finalLetter = '\"';
           break;
         case "'":
-          finalLetter = "\\'";
+          finalLetter = "\'";
           break;
         case "\\":
           finalLetter = '\\';
@@ -240,7 +240,7 @@
 
       }
 
-      console.log(tmpSet);
+      console.log(JSON.stringify(tmpSet));
 
       if(tmpSet.length > 0) {
         var xhttp = new XMLHttpRequest();

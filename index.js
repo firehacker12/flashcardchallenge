@@ -106,8 +106,34 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 
+	socket.on('sendQuickAnswer', (ans) =>{
+		if(STUDENT_LIST[socket.id]){
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+				console.log("e");
+				SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId].emit('receiveQuickAnswer',ans,socket.id);
+			}
+		}
+	});
+
+	socket.on('quickSendcA', (cA) => {
+		if(STUDENT_LIST[socket.id]){
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+				var room = STUDENT_LIST[socket.id].room;
+				for(var i=0; i<ROOM_LIST[room].students.length; i++){
+					if(ROOM_LIST[room].students){
+						SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('checkQuickAnswer',cA);
+					}
+				}
+			}
+		}
+	});
+
 	socket.on('answerToQuestion', (questionNumber, answer) => {
-		SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId].emit('studentSentQuestion', questionNumber, answer);
+		if(STUDENT_LIST[socket.id]){
+			if (ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId) {
+				SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId].emit('studentSentQuestion', questionNumber, answer, ROOM_LIST[STUDENT_LIST[socket.id].room].students, socket.id);
+			}
+		}
 	});
 
 	socket.on('askQuickQuestion',(setQuestion,settings) => {

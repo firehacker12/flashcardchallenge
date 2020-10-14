@@ -317,6 +317,24 @@
       <div id="overlay" style="display:none;" onclick="hidePopup();"></div>
       <span style="display:none;" id="teacherName"><?php echo $Username; ?></span>
     </div>
+    <div id="showStudentScores" style="display:none;">
+      <center><h1 class="is-size-1">Your quiz is active!</h1></center>
+      <center><h1 class="is-size-3">View your students progress live!</h1></center>
+      <hr/>
+      <center>
+        <div style="width:100%;display:flex;">
+          <div class="column" id="lobbyColumn1Scores">
+
+          </div>
+          <div class="column" id="lobbyColumn2Scores">
+
+          </div>
+          <div class="column" id="lobbyColumn3Scores">
+
+          </div>
+        </div>
+      </center>
+    </div>
     <div id="lobbyRoom" style="display:none;">
       <br/>
       <center>
@@ -570,6 +588,34 @@
     });
   </script>
   <style>
+    progress {
+      appearance: none;
+      webkit-appearance: none;
+      //position:absolute;
+      width: 150px;
+    }
+    progress::-webkit-progress-bar {
+      background-color: rgba(220, 220, 220, 1);
+      border-radius: 10px;
+    }
+    progress::-webkit-progress-value {
+      float: left;
+      background-color: rgb(81, 224, 49);
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      position:relative;
+      //right:75px;
+    }
+    .other::-webkit-progress-value {
+      background-color: rgb(247, 62, 30);
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+      left: var(--xOffset);
+    }
     button {
       margin: 25px;
       transition: margin .25s;

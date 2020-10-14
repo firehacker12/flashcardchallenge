@@ -8,10 +8,11 @@
     <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
+    <script src="main.js"></script>
   </head>
   <body>
     <center>
-      <div id='joinMake' style="display:none; ">
+      <div id='joinMake' style="//display:none;">
         <br>
         <h1 style="font-family: 'Permanent Marker', cursive;font-size:4em;">Quizzard</h1>
 
@@ -36,21 +37,42 @@
         </div>
       </div>
 
-      <div id="gameCavas">
-        <script src="main.js"></script>
+      <div id="gameCavas" style="display:none;">
+
       </div>
 
-      <div id="quickQuiz" style=";">
+      <div id="quickQuiz" style="display:none;">
+        <div>
           <center>
-          <h1  class="is-size-1 has-text-black">Student Waiting Room</h1>
+          <h1  class="is-size-1 has-text-black">Answer The Questions</h1>
           <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
-          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right; border:1px solid black;border-radius: 50px; background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1>
+          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;" id="quickQuizPoints" >0 Points</h1>
+          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;left:20px;" id="quickQuizTime" >0 Seconds</h1>
           <hr style="border:1px solid black;">
+          <h1  class="is-size-3 has-text-black" id="quickQuestionShowed" style="max-width:95%;word-wrap:break-word;" >Question 1</h1>
           <br>
-          <h1  class="is-size-3 has-text-black" id="quickQuestionShowed" style="" >Question 1</h1>
-          <hr style="border:1px solid grey;">
-          <div id="quickQuestionHolder"></div>
+          <hr style="border:1px solid grey;margin:0px;">
+        </div>
+          <div id="quickQuestionHolder2" style="display:none;">
+            <button class="button //is-info" style="width:50%;height:calc(100% - 196px);border-radius:0px;font-size:3em;background-color:#A8E4A0;" id="quickButton21" >Button 1</button><!--
+            --><button class="button //is-danger" style="width:50%;height:calc(100% - 196px);border-radius:0px;font-size:3em;background-color:#B0E0E6;" id="quickButton22" >Button 2</button>
+          </div>
+          <div id="quickQuestionHolder4" style="display:none;">
+            <button class="button //is-danger" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#A8E4A0;" id="quickButton41" >Button 1</button><!--
+            --><button class="button //is-link" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#B0E0E6;" id="quickButton42" >Button 2</button><!--
+            --><button class="button //is-warning" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#C8A2C8;" id="quickButton43" >Button 3</button><!--
+            --><button class="button //is-success" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#F3E5AB;" id="quickButton44" >Button 4</button>
+          </div>
         </center>
+      </div>
+      <div id="quickQuizWait" style="display:none;">
+        <div>
+          <center>
+          <h1  class="is-size-1 has-text-black">Waiting For Everyone To Answer</h1>
+          <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
+          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;// border:1px solid black;//border-radius: 50px;// background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1>
+          <hr style="border:1px solid black;">
+        </div>
       </div>
 
       <div id="test" style="display:none;">
@@ -64,12 +86,17 @@
 
       </center>
   </body>
+  <style>
+    #test {
+      overflow-y: scroll;
+    }
+  </style>
   <script>
     function submitQuestion(index) {
       if (mySet) {
         for (var i=0; i<mySet[index].fA.length+1; i++) {
-          if (document.getElementById("question1answer"+i).checked) {
-            console.log(index, document.getElementById('question1label'+i).textContent.substring(3, document.getElementById('question1label'+i).textContent.length));
+          if (document.getElementById("question"+(index+1)+"answer"+i).checked) {
+            console.log(index, document.getElementById('question'+(index+1)+'label'+i).textContent.substring(3, document.getElementById('question'+(index+1)+'label'+i).textContent.length));
             document.getElementById("question"+(index+1)).setAttribute("style","display:none;flex-direction: column; width:65%;");
             if (document.getElementById("question"+(index+2)) != undefined) {
               document.getElementById("question"+(index+2)).setAttribute("style","display:flex;flex-direction:column; width: 65%;");
@@ -77,7 +104,7 @@
             else {
               document.getElementById("finishedDiv").setAttribute("style","");
             }
-            socket.emit('answerToQuestion', index, document.getElementById('question1label'+i).textContent.substring(3, document.getElementById('question1label'+i).textContent.length));
+            socket.emit('answerToQuestion', index, document.getElementById('question'+(index+1)+'label'+i).textContent.substring(3, document.getElementById('question'+(index+1)+'label'+i).textContent.length));
             break;
           }
         }

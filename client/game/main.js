@@ -17,7 +17,7 @@ var drawUsing = "pen";
 var drawSize = 10;
 
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(800, 800).parent('gameCavas');
   textSize(20);
   //tiles.push(new Tile(100,100,"very funny",0,1));
   //for(var i=0; i<3; i++){

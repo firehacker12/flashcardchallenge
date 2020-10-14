@@ -6,6 +6,8 @@ var game = null;
 var quickQuestionNum = 0;
 var mySet = null;
 var mySettings = null;
+var quickStudentAnswers = [];
+var quickStudentsDone = 0;
 
 function roomMake(gameType) {
   if (currentSelected != null) {
@@ -87,9 +89,10 @@ socket.on('startGame', (room) => {
   document.getElementById("lobbyRoom").setAttribute('style','display:none;');
   game = room.settings.gameType;
 
-  console.log(mySet);
   switch(room.settings.gameType) {
     case "test":
+      document.getElementById("showStudentScores").setAttribute("style", "");
+      showPlayers(room);
       setupTest(mySet);
       break;
   }
@@ -100,12 +103,91 @@ socket.on('startGame', (room) => {
   }
 });
 
-function setupTest(set) {
-  socket.emit('sendQuestionsTest',set);
-}
+socket.on('studentSentQuestion', (questionNumber, answer, students, socketID) => {
+  var studentID;
+  var studentName;
+
+  for (var i=0; i<students.length; i++) {
+    if (students[i]) {
+      if (students[i].id == socketID) {
+        studentID = i;
+        studentName = students[i].name;
+        break;
+      }
+    }
+  }
+  if (answer == mySet[questionNumber].cA) {
+    var unitUp = 1/mySet.length;
+    document.getElementById(correctStudentIDToDivName[studentID]).setAttribute("value",parseInt(document.getElementById(correctStudentIDToDivName[studentID]).getAttribute("value"))+(unitUp*150));
+    //document.getElementById(wrongStudentIDToDivName[studentID]).style.left = (-150)+parseInt(document.getElementById(correctStudentIDToDivName[studentID]).getAttribute("value"));
+    document.getElementById(wrongStudentIDToDivName[studentID]).style.setProperty('--xOffset', parseInt(document.getElementById(wrongStudentIDToDivName[studentID]).style.getPropertyValue("--xOffset"))+(150/mySet.length));
+    //for (var i=0; i<)
+    //document.getElementById("")
+  }
+  else {
+    var unitUp = 1/mySet.length;
+    document.getElementById(wrongStudentIDToDivName[studentID]).setAttribute("value", parseInt(document.getElementById(wrongStudentIDToDivName[studentID]).getAttribute("value"))+(unitUp*150));
+    //document.getElementById(wrongStudentIDToDivName[studentID]).style.width = parseInt(document.getElementById(correctStudentIDToDivName[studentID]).getAttribute("value"));
+  }
+});
+
+socket.on('receiveQuickAnswer',(ans,studId) => {
+  //console.log(ans);
+  if(quickStudentAnswers[ans] != undefined){
+    quickStudentAnswers[ans] += 1;
+    quickStudentsDone++;
+    if(quickStudentsDone >= studentCount){
+      //console.log("e");
+      socket.emit('quickSendcA',mySet[quickQuestionNum].cA);
+    }
+    //console.log("r");
+  }
+});
 
 function quickQuestion(){
   socket.emit('askQuickQuestion',mySet[quickQuestionNum],mySettings);
+  quickStudentAnswers = [];
+  quickStudentsDone = 0;
+  quickStudentAnswers[mySet[quickQuestionNum].cA] = 0;
+  for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
+    quickStudentAnswers[mySet[quickQuestionNum].fA[i]] = 0;
+  }
+}
+
+var correctStudentIDToDivName = [];
+var wrongStudentIDToDivName = [];
+
+function showPlayers(currentRoom) {
+  studentCount = 0;
+  document.getElementById('lobbyColumn1Scores').innerHTML = "";
+  document.getElementById('lobbyColumn2Scores').innerHTML = "";
+  document.getElementById('lobbyColumn3Scores').innerHTML = "";
+  var columnNum = 1;
+  for(var i=0; i<currentRoom.students.length; i++){
+    if(currentRoom.students[i]){
+      //document.getElementById('lobbyWaitStudentList').innerHTML += "<p1> "+currentRoom.students[i].name+" </p1>";
+      if(columnNum == 1){
+        columnNum++;
+        //<div style='position:relative;right:75px;'><progress id='correctProgress"+studentCount+"' value='0' max='150'></progress><progress class='other' style='left:0;width:0px;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div>
+        document.getElementById('lobbyColumn1Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
+      }
+      else if(columnNum == 2){
+        columnNum++;
+        document.getElementById('lobbyColumn2Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
+      }
+      else{
+        columnNum = 1;
+        document.getElementById('lobbyColumn3Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
+      }
+      correctStudentIDToDivName[i] = "correctProgress"+studentCount;
+      wrongStudentIDToDivName[i] = "wrongProgress"+studentCount;
+      studentCount++;
+    }
+  }
+}
+
+function setupTest(set) {
+  socket.emit('sendQuestionsTest',set);
 }
 
 socket.on('joinLobby',(room,id_) => {
@@ -127,22 +209,23 @@ socket.on('joinLobby',(room,id_) => {
   }*/
 });
 
-
+var studentCount = 0;
 socket.on('updateLobby',(room) => {
   var columnNum = 1;
   //document.getElementById('lobbyCode').innerHTML = room.id;
   //document.getElementById('lobbyWaitStudentList').innerHTML = "";
   document.getElementById("startTheRoom").removeAttribute("disabled");
-  console.log(room.students.length);
   if (room.students.length == 0) document.getElementById("startTheRoom").setAttribute("disabled", "true");
   document.getElementById('lobbyColumn1').innerHTML = "";
   document.getElementById('lobbyColumn2').innerHTML = "";
   document.getElementById('lobbyColumn3').innerHTML = "";
+  studentCount = 0;
   for(var i=0; i<room.students.length; i++){
     if(room.students[i]){
       //document.getElementById('lobbyWaitStudentList').innerHTML += "<p1> "+room.students[i].name+" </p1>";
-      if(columnNum == 1){
+      if(columnNum == 1) {
         columnNum++;
+        //<div style='position:relative;right:75px;'><progress id='correctProgress"+studentCount+"' value='0' max='150'></progress><progress class='other' style='left:0;width:0px;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div>
         document.getElementById('lobbyColumn1').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+room.students[i].name+"</h1><br>";
       }
       else if(columnNum == 2){
@@ -153,6 +236,7 @@ socket.on('updateLobby',(room) => {
         columnNum = 1;
         document.getElementById('lobbyColumn3').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+room.students[i].name+"</h1><br>";
       }
+      studentCount++;
     }
   }
 });

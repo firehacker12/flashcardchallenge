@@ -5,6 +5,11 @@ var gameCode = null;
 var picDrawer = false;
 var mySet;
 var studentAnswers = [];
+var quickPoints = 0;
+var quickAnswerSave = null;
+var quickTimer = 0;
+var quickGameTrue = false;
+var gameSetting = null;
 
 function switchName(){
   //document.getElementById("codeE").setAttribute("style","display:none;");
@@ -17,7 +22,19 @@ function switchName(){
   }
 }
 
-function roomJoin(){
+function overrideRoomJoin(customName, customCode) {
+  let roomTmp = customCode;
+  let nameTmp = customName;
+  if(roomTmp.length == 6){
+    socket.emit('joinRoom',roomTmp,nameTmp);
+  }
+  else{
+    document.getElementById('enterCode').value = "";
+    document.getElementById('codeError').setAttribute("style","color:red;");
+  }
+}
+
+function roomJoin() {
   let roomTmp = document.getElementById('enterCode').value.trim();
   let nameTmp = document.getElementById('enterName').value.trim();
   if(roomTmp.length == 6){
@@ -29,14 +46,40 @@ function roomJoin(){
   }
 }
 
+function sendQuickAnswer(ans){
+  socket.emit('sendQuickAnswer',ans);
+  document.getElementById('quickQuizWait').setAttribute("style","");
+  document.getElementById('quickQuiz').setAttribute("style","display:none;");
+  quickAnswerSave = ans;
+  quickGameTrue = false;
+  //console.log("e");
+}
+
+function quickFailed(){
+  socket.emit('sendQuickAnswer',"╬");
+  quickAnswerSave = "╬";
+  quickGameTrue = false;
+  quickTimer = 0;
+  document.getElementById('quickQuizWait').setAttribute("style","");
+  document.getElementById('quickQuiz').setAttribute("style","display:none;");
+}
+
 socket.on('receiveQuestionsTest', (set) => {
   mySet = set;
   setupTest(mySet);
 });
 
-socket.on('studentSentQuestion', (questionNumber, answer) => {
+socket.on('checkQuickAnswer', (cA) => {
+  if(quickAnswerSave == cA){
+    quickPoints += 50 + (((parseInt(gameSetting.rounds.split(' ')[0])-quickTimer)/parseInt(gameSetting.rounds.split(' ')[0]))*50);
+    for(var i=0; i<document.querySelectorAll('#quickQuizPoints').length; i++){
+      document.querySelectorAll('#quickQuizPoints')[i].innerHTML = floor(quickPoints)+" Points";
+    }
 
+  }
 });
+
+setInterval(function(){ if(quickGameTrue){quickTimer += 0.01; document.getElementById('quickQuizTime').innerHTML = nf(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer,1,2) + " Seconds"; if(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer <= 0){quickFailed();} } }, 10);
 
 socket.on('wrongCode',()=> {
   document.getElementById('enterCode').value = "";
@@ -46,6 +89,77 @@ socket.on('wrongCode',()=> {
 socket.on('answerQuickQuestion', (tmpSet,settings) => {
   //console.log(tmpSet.q);
   document.getElementById('quickQuiz').setAttribute('style','');
+  document.getElementById('quickQuestionShowed').innerHTML = tmpSet.q;
+  if(tmpSet.fA.length<3){
+    document.getElementById('quickQuestionHolder2').setAttribute('style','');
+    let r = random();
+    if(r > 0.5){
+      document.getElementById('quickButton21').innerHTML = tmpSet.cA;
+      document.getElementById('quickButton22').innerHTML = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    }
+    else{
+      document.getElementById('quickButton22').innerHTML = tmpSet.cA;
+      document.getElementById('quickButton21').innerHTML = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    }
+  }
+  else{
+    document.getElementById('quickQuestionHolder4').setAttribute('style','');
+    let r = random();
+
+    var falseAnswer1 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    var falseAnswer2 = tmpSet.fA[floor(random(0,tmpSet.fA.length))]
+    while (falseAnswer2 == falseAnswer1) {
+      falseAnswer2 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    }
+    var falseAnswer3 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    while (falseAnswer2 == falseAnswer3 || falseAnswer1 == falseAnswer3) {
+      falseAnswer3 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    }
+    if(r < 0.25){
+      document.getElementById('quickButton41').innerHTML = tmpSet.cA;
+      document.getElementById('quickButton41').setAttribute("onclick","sendQuickAnswer('"+tmpSet.cA+"');");
+      document.getElementById('quickButton42').innerHTML = falseAnswer1;
+      document.getElementById('quickButton42').setAttribute("onclick","sendQuickAnswer('"+falseAnswer1+"');");
+      document.getElementById('quickButton43').innerHTML = falseAnswer2;
+      document.getElementById('quickButton43').setAttribute("onclick","sendQuickAnswer('"+falseAnswer2+"');");
+      document.getElementById('quickButton44').innerHTML = falseAnswer3;
+      document.getElementById('quickButton44').setAttribute("onclick","sendQuickAnswer('"+falseAnswer3+"');");
+    }
+    else if(r < 0.5){
+      document.getElementById('quickButton42').innerHTML = tmpSet.cA;
+      document.getElementById('quickButton42').setAttribute("onclick","sendQuickAnswer('"+tmpSet.cA+"');");
+      document.getElementById('quickButton41').innerHTML = falseAnswer1;
+      document.getElementById('quickButton41').setAttribute("onclick","sendQuickAnswer('"+falseAnswer1+"');");
+      document.getElementById('quickButton43').innerHTML = falseAnswer2;
+      document.getElementById('quickButton43').setAttribute("onclick","sendQuickAnswer('"+falseAnswer2+"');");
+      document.getElementById('quickButton44').innerHTML = falseAnswer3;
+      document.getElementById('quickButton44').setAttribute("onclick","sendQuickAnswer('"+falseAnswer3+"');");
+    }
+    else if(r < 0.75){
+      document.getElementById('quickButton43').innerHTML = tmpSet.cA;
+      document.getElementById('quickButton43').setAttribute("onclick","sendQuickAnswer('"+tmpSet.cA+"');");
+      document.getElementById('quickButton42').innerHTML = falseAnswer1;
+      document.getElementById('quickButton42').setAttribute("onclick","sendQuickAnswer('"+falseAnswer1+"');");
+      document.getElementById('quickButton41').innerHTML = falseAnswer2;
+      document.getElementById('quickButton41').setAttribute("onclick","sendQuickAnswer('"+falseAnswer2+"');");
+      document.getElementById('quickButton44').innerHTML = falseAnswer3;
+      document.getElementById('quickButton44').setAttribute("onclick","sendQuickAnswer('"+falseAnswer3+"');");
+    }
+    else{
+      document.getElementById('quickButton44').innerHTML = tmpSet.cA;
+      document.getElementById('quickButton44').setAttribute("onclick","sendQuickAnswer('"+tmpSet.cA+"');");
+      document.getElementById('quickButton42').innerHTML = falseAnswer1;
+      document.getElementById('quickButton42').setAttribute("onclick","sendQuickAnswer('"+falseAnswer1+"');");
+      document.getElementById('quickButton43').innerHTML = falseAnswer2;
+      document.getElementById('quickButton43').setAttribute("onclick","sendQuickAnswer('"+falseAnswer2+"');");
+      document.getElementById('quickButton41').innerHTML = falseAnswer3;
+      document.getElementById('quickButton41').setAttribute("onclick","sendQuickAnswer('"+falseAnswer3+"');");
+    }
+
+  }
+  quickGameTrue = true;
+  quickTimer = 0;
+  quickAnswerSave = null;
 
 });
 
@@ -60,6 +174,7 @@ socket.on('roomClosed', () => {
 socket.on('startGame', (room) => {
   document.getElementById("lobbyScreen").setAttribute('style','display:none;');
   console.log(room.settings.gameType);
+  gameSetting = room.settings;
   switch(room.settings.gameType) {
     case "pic":
       document.getElementById('gameCavas').setAttribute('style',"");
