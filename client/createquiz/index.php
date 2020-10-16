@@ -18,7 +18,7 @@
 
 <html>
   <head>
-    <title>Home</title>
+    <title>Create a Quiz</title>
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
@@ -138,10 +138,13 @@
           finalLetter = '\"';
           break;
         case "'":
-          finalLetter = "\'";
+          finalLetter = "&apos;";
           break;
         case "\\":
-          finalLetter = '\\';
+          finalLetter = "\\\\";
+          break;
+        case "+":
+          finalLetter = encodeURIComponent("+");
           break;
         default:
           finalLetter = letter;

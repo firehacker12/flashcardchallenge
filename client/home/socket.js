@@ -8,6 +8,9 @@ var mySet = null;
 var mySettings = null;
 var quickStudentAnswers = [];
 var quickStudentsDone = 0;
+var quickAnswersIn = 0;
+var quickStudentPoints = [];
+var quickStudentPointsCount = 0;
 
 function roomMake(gameType) {
   if (currentSelected != null) {
@@ -40,7 +43,7 @@ function roomMake(gameType) {
         gameTypeString = "Flashcards";
         break;
       case "quick":
-        gameTypeString = "Quick Quizes"
+        gameTypeString = "Quick Quizzes"
         settingsTmp.rounds = document.getElementById("quickTime").value;
         break;
       case "test":
@@ -116,41 +119,177 @@ socket.on('studentSentQuestion', (questionNumber, answer, students, socketID) =>
       }
     }
   }
+  var correctStudent;
+  var incorrectStudent;
+  correctStudent = document.getElementById(correctStudentIDToDivName[studentID]);
+  incorrectStudent = document.getElementById(wrongStudentIDToDivName[studentID]);
+  var averageCorrect = document.getElementById("correctAverage");
+  var averageIncorrect = document.getElementById("incorrectAverage");
+
   if (answer == mySet[questionNumber].cA) {
     var unitUp = 1/mySet.length;
-    document.getElementById(correctStudentIDToDivName[studentID]).setAttribute("value",parseInt(document.getElementById(correctStudentIDToDivName[studentID]).getAttribute("value"))+(unitUp*150));
-    //document.getElementById(wrongStudentIDToDivName[studentID]).style.left = (-150)+parseInt(document.getElementById(correctStudentIDToDivName[studentID]).getAttribute("value"));
-    document.getElementById(wrongStudentIDToDivName[studentID]).style.setProperty('--xOffset', parseInt(document.getElementById(wrongStudentIDToDivName[studentID]).style.getPropertyValue("--xOffset"))+(150/mySet.length));
+    incorrectStudent = document.getElementById(wrongStudentIDToDivName[studentID]);
+    console.log(((unitUp*500)/students.length));
+    correctStudent.setAttribute("value",parseFloat(correctStudent.getAttribute("value"))+(unitUp*150));
+    averageCorrect.setAttribute("value",parseFloat(averageCorrect.getAttribute("value"))+((unitUp*500)/students.length));
+    //incorrectStudent.style.left = (-150)+parseInt(correctStudent.getAttribute("value"));
+    console.log((150/mySet.length), (((unitUp*500)/students.length)));
+    incorrectStudent.style.setProperty('--xOffset', parseFloat(incorrectStudent.style.getPropertyValue("--xOffset"))+(150/mySet.length));
+    averageIncorrect.style.setProperty('--xOffset', parseFloat(averageIncorrect.style.getPropertyValue("--xOffset"))+(((unitUp*500)/students.length)));
+
     //for (var i=0; i<)
     //document.getElementById("")
   }
   else {
     var unitUp = 1/mySet.length;
-    document.getElementById(wrongStudentIDToDivName[studentID]).setAttribute("value", parseInt(document.getElementById(wrongStudentIDToDivName[studentID]).getAttribute("value"))+(unitUp*150));
-    //document.getElementById(wrongStudentIDToDivName[studentID]).style.width = parseInt(document.getElementById(correctStudentIDToDivName[studentID]).getAttribute("value"));
+    incorrectStudent.setAttribute("value", parseFloat(incorrectStudent.getAttribute("value"))+(unitUp*150));
+    averageIncorrect.setAttribute("value", parseFloat(averageIncorrect.getAttribute("value"))+((unitUp*500)/students.length));
+    //incorrectStudent.style.width = parseInt(correctStudent.getAttribute("value"));
+  }
+
+  if (round(parseFloat(correctStudent.getAttribute("value"))) == round(parseFloat(correctStudent.getAttribute("max")))) {
+    correctStudent.style.setProperty("--borderTopRight", "10px");
+    correctStudent.style.setProperty("--borderBottomRight", "10px");
+    correctStudent.style.setProperty("--borderTopLeft","10px");
+    correctStudent.style.setProperty("--borderBottomLeft", "10px");
+  }
+  else {
+    correctStudent.style.setProperty("--borderTopRight", "0px");
+    correctStudent.style.setProperty("--borderBottomRight", "0px");
+    correctStudent.style.setProperty("--borderTopLeft","10px");
+    correctStudent.style.setProperty("--borderBottomLeft", "10px");
+  }
+  if (round(parseFloat(correctStudent.getAttribute("value"))) == 0 && round(parseFloat(incorrectStudent.getAttribute("value"))) > 0) {
+    incorrectStudent.style.setProperty("--borderTopRight", "10px");
+    incorrectStudent.style.setProperty("--borderTopLeft", "10px");
+    incorrectStudent.style.setProperty("--borderBottomRight", "10px");
+    incorrectStudent.style.setProperty("--borderBottomLeft", "10px");
+  }
+  else {
+    incorrectStudent.style.setProperty("--borderTopRight", "10px");
+    incorrectStudent.style.setProperty("--borderTopLeft", "0px");
+    incorrectStudent.style.setProperty("--borderBottomRight", "10px");
+    incorrectStudent.style.setProperty("--borderBottomLeft", "0px");
+  }
+  if (round(parseFloat(averageCorrect.getAttribute("value"))) == round(parseFloat(averageCorrect.getAttribute("max")))) {
+    averageCorrect.style.setProperty("--borderTopRight", "10px");
+    averageCorrect.style.setProperty("--borderBottomRight", "10px");
+    averageCorrect.style.setProperty("--borderTopLeft","10px");
+    averageCorrect.style.setProperty("--borderBottomLeft", "10px");
+  }
+  else {
+    averageCorrect.style.setProperty("--borderTopRight", "0px");
+    averageCorrect.style.setProperty("--borderBottomRight", "0px");
+    averageCorrect.style.setProperty("--borderTopLeft","10px");
+    averageCorrect.style.setProperty("--borderBottomLeft", "10px");
+  }
+  if (round(parseFloat(averageCorrect.getAttribute("value"))) == 0 && round(parseFloat(averageIncorrect.getAttribute("value"))) > 0) {
+    averageIncorrect.style.setProperty("--borderTopRight", "10px");
+    averageIncorrect.style.setProperty("--borderTopLeft", "10px");
+    averageIncorrect.style.setProperty("--borderBottomRight", "10px");
+    averageIncorrect.style.setProperty("--borderBottomLeft", "10px");
+  }
+  else {
+    averageIncorrect.style.setProperty("--borderTopRight", "10px");
+    averageIncorrect.style.setProperty("--borderTopLeft", "0px");
+    averageIncorrect.style.setProperty("--borderBottomRight", "10px");
+    averageIncorrect.style.setProperty("--borderBottomLeft", "0px");
   }
 });
 
 socket.on('receiveQuickAnswer',(ans,studId) => {
   //console.log(ans);
-  if(quickStudentAnswers[ans] != undefined){
-    quickStudentAnswers[ans] += 1;
-    quickStudentsDone++;
-    if(quickStudentsDone >= studentCount){
-      //console.log("e");
-      socket.emit('quickSendcA',mySet[quickQuestionNum].cA);
-    }
+  //console.log(ans);
+  if(quickStudentAnswers[ans] != undefined || ans == "â•¬"){
     //console.log("r");
+    if(ans == "â•¬"){
+      //quickStudentAnswers[ans] += 1;
+      quickStudentsDone++;
+      //quickAnswersIn++;
+      document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].cA]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].cA]+"</h1><br>";
+      for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
+        document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+"</h1><br>";
+      }
+      if(quickStudentsDone >= studentCount){
+        //console.log("e");
+
+
+        socket.emit('quickSendcA',mySet[quickQuestionNum].cA);
+        document.getElementById('quickShowAnswer').setAttribute('style','');
+      }
+    }
+    else{
+      quickStudentAnswers[ans] += 1;
+      quickStudentsDone++;
+      quickAnswersIn++;
+      document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].cA]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].cA]+"</h1><br>";
+      for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
+        document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+"</h1><br>";
+      }
+      if(quickStudentsDone >= studentCount){
+        //console.log("e");
+
+        socket.emit('quickSendcA',mySet[quickQuestionNum].cA);
+        document.getElementById('quickShowAnswer').setAttribute('style','');
+        if(quickQuestionNum == mySet.length-1){
+          document.getElementById('quickNextQuestion').innerHTML = "Finish";
+        }
+      }
+      //console.log("r");
+    }
   }
 });
+
+socket.on('receiveQuickPoints', (points,id,students) => {
+  quickStudentPointsCount++;
+  for(var i=0; i<students.length; i++){
+    if(students != undefined){
+      if(students[i].id == id){
+        quickStudentPoints.push({name:students[i].name,points:points});
+      }
+    }
+  }
+  if(quickStudentPointsCount >= students.length){
+    quickStudentPoints = quickStudentPoints.slice().sort(compareValues("points", "desc"));
+    document.getElementById("leaderboardContainer").innerHTML = "";
+    for(var i=0; i<quickStudentPoints.length; i++){
+      if (i > 4) break;
+      var html = "<center><h1 id='leader' class='is-size-4 has-text-weight-light'>"+(i+1)+". "+quickStudentPoints[i].name+" - "+nf(quickStudentPoints[i].points,1,2)+"</h1></center>";
+      document.getElementById("leaderboardContainer").innerHTML += html;
+    }
+    socket.emit('sendQuickLeaderboard',quickStudentPoints);
+  }
+});
+
+function quickStartNextQuestion(){
+  quickQuestionNum++;
+  if(quickQuestionNum >= mySet.length){
+    endQuickQuiz();
+  }
+  else{
+    quickQuestion();
+  }
+}
+
+function endQuickQuiz(){
+  endRoom();
+}
 
 function quickQuestion(){
   socket.emit('askQuickQuestion',mySet[quickQuestionNum],mySettings);
   quickStudentAnswers = [];
+  quickStudentPoints = [];
   quickStudentsDone = 0;
+  quickStudentPointsCount = 0;
+  quickAnswersIn = 0;
   quickStudentAnswers[mySet[quickQuestionNum].cA] = 0;
+  document.getElementById('quickGameRoom').setAttribute('style','');
+  document.getElementById('quickShowAnswer').setAttribute('style','display:none;');
+  document.getElementById('quickQuestionShowed').innerHTML = mySet[quickQuestionNum].q;
+  document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value='0' max='1'></progress><br><br>";
   for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
     quickStudentAnswers[mySet[quickQuestionNum].fA[i]] = 0;
+    document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value='0' max='1'></progress><br><br>";
   }
 }
 
@@ -210,7 +349,7 @@ socket.on('joinLobby',(room,id_) => {
 });
 
 var studentCount = 0;
-socket.on('updateLobby',(room) => {
+socket.on('updateLobby',(room, previousStudents, socketID) => {
   var columnNum = 1;
   //document.getElementById('lobbyCode').innerHTML = room.id;
   //document.getElementById('lobbyWaitStudentList').innerHTML = "";
@@ -220,6 +359,27 @@ socket.on('updateLobby',(room) => {
   document.getElementById('lobbyColumn2').innerHTML = "";
   document.getElementById('lobbyColumn3').innerHTML = "";
   studentCount = 0;
+  var studentID;
+  var studentName;
+  var correctStudent;
+  var incorrectStudent;
+
+  if (previousStudents != null && socketID != null) {
+    for (var i=0; i<previousStudents.length; i++) {
+      if (previousStudents[i].id == socketID) {
+        studentID = i;
+        studentName = previousStudents[i].name;
+        correctStudent = document.getElementById(correctStudentIDToDivName[studentID]);
+        incorrectStudent = document.getElementById(wrongStudentIDToDivName[studentID]);
+        var info = document.createElement("div");
+        info.innerHTML = "<p class='is-size-6 has-text-grey-light'>Disconnected</p>";
+        if (correctStudent != undefined && correctStudent != null) {
+          correctStudent.parentElement.appendChild(info);
+        }
+      }
+    }
+  }
+
   for(var i=0; i<room.students.length; i++){
     if(room.students[i]){
       //document.getElementById('lobbyWaitStudentList').innerHTML += "<p1> "+room.students[i].name+" </p1>";

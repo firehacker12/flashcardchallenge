@@ -43,7 +43,6 @@ var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 	socket.id = StudentNumber;
   StudentNumber++;
-	console.log("someone connected");
 	SOCKET_LIST[socket.id] = socket;
 	var student = Student(socket.id);
 	STUDENT_LIST[socket.id] = student;
@@ -57,16 +56,18 @@ io.sockets.on('connection', function(socket){
 
   socket.on('joinRoom',(code,name)=> {
 		if(ROOM_LIST[code]){
-			if(ROOM_LIST[code].id == code){
-				if(ROOM_LIST[code].gameStarted == false){
-					ROOM_LIST[code].students.push({name:name,id:socket.id});
+			var room = ROOM_LIST[code];
+			if(room.id == code){
+				if(room.gameStarted == false){
+					room.students.push({name:name,id:socket.id});
+					console.log(name + " joined");
 					socket.emit("joinLobby",ROOM_LIST[code],socket.id);
 					STUDENT_LIST[socket.id].room = ROOM_LIST[code].id;
-					SOCKET_LIST[ROOM_LIST[code].teacherId].emit('updateLobby',ROOM_LIST[code]);
-					for(var i=0; i<ROOM_LIST[code].students.length; i++){
-						if(ROOM_LIST[code].students[i]){
-							if(socket.id != ROOM_LIST[code].students[i].id){
-								SOCKET_LIST[ROOM_LIST[code].students[i].id].emit('updateLobby',ROOM_LIST[code]);
+					SOCKET_LIST[room.teacherId].emit('updateLobby',room, null, null);
+					for(var i=0; i<room.students.length; i++){
+						if(room.students[i]){
+							if(socket.id != room.students[i].id){
+								SOCKET_LIST[room.students[i].id].emit('updateLobby',room, null, null);
 							}
 						}
 					}
@@ -80,26 +81,29 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('startTheGame', (info) => {
 		if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
-			if(ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId == socket.id){
-				for(var i=0; i<ROOM_LIST[STUDENT_LIST[socket.id].room].students.length; i++){
-					if(ROOM_LIST[STUDENT_LIST[socket.id].room].students[i]){
-						SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].students[i].id].emit('startGame',ROOM_LIST[STUDENT_LIST[socket.id].room]);
+			var room = ROOM_LIST[STUDENT_LIST[socket.id].room];
+			if(room.teacherId == socket.id){
+				for(var i=0; i<room.students.length; i++){
+					if(room.students[i]){
+						SOCKET_LIST[room.students[i].id].emit('startGame',room);
 
 				  }
 				}
-				socket.emit('startGame',ROOM_LIST[STUDENT_LIST[socket.id].room]);
-				ROOM_LIST[STUDENT_LIST[socket.id].room].gameStarted = true;
+				socket.emit('startGame',room);
+				room.gameStarted = true;
 			}
 		}
 	});
 
 	socket.on('sendQuestionsTest', (set) => {
 		if(STUDENT_LIST[socket.id]){
-			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+			var student = STUDENT_LIST[socket.id];
+			if(ROOM_LIST[student.room]){
 				var room = STUDENT_LIST[socket.id].room;
-				for(var i=0; i<ROOM_LIST[room].students.length; i++){
-					if(ROOM_LIST[room].students){
-						SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('receiveQuestionsTest',set);
+				var myRoom = ROOM_LIST[room];
+				for(var i=0; i<myRoom.students.length; i++){
+					if(myRoom.students){
+						SOCKET_LIST[myRoom.students[i].id].emit('receiveQuestionsTest',set);
 					}
 				}
 			}
@@ -108,16 +112,41 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('sendQuickAnswer', (ans) =>{
 		if(STUDENT_LIST[socket.id]){
-			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
-				console.log("e");
+			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){//
 				SOCKET_LIST[ROOM_LIST[STUDENT_LIST[socket.id].room].teacherId].emit('receiveQuickAnswer',ans,socket.id);
+			}
+		}
+	});
+
+	socket.on('sendQuickPoints', (points) => {
+		if(STUDENT_LIST[socket.id]){
+			var student = STUDENT_LIST[socket.id];
+			if(ROOM_LIST[student.room]){
+				var room = ROOM_LIST[student.room];
+				//console.log("e");
+				SOCKET_LIST[room.teacherId].emit('receiveQuickPoints',points,socket.id,room.students);
+			}
+		}
+	});
+
+	socket.on('sendQuickLeaderboard', (leaderboard) => {
+		if(STUDENT_LIST[socket.id]){
+			var student = STUDENT_LIST[socket.id];
+			if(ROOM_LIST[student.room]){
+				var room = student.room;
+				for(var i=0; i<ROOM_LIST[room].students.length; i++){
+					if(ROOM_LIST[room].students){
+						SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('receiveQuickLeaderboard',leaderboard);
+					}
+				}
 			}
 		}
 	});
 
 	socket.on('quickSendcA', (cA) => {
 		if(STUDENT_LIST[socket.id]){
-			if(ROOM_LIST[STUDENT_LIST[socket.id].room]){
+			var student = STUDENT_LIST[socket.id];
+			if(ROOM_LIST[student.room]){
 				var room = STUDENT_LIST[socket.id].room;
 				for(var i=0; i<ROOM_LIST[room].students.length; i++){
 					if(ROOM_LIST[room].students){
@@ -145,6 +174,13 @@ io.sockets.on('connection', function(socket){
 						SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('answerQuickQuestion',setQuestion,settings);
 					}
 				}
+				/*setTimeout((myRoom) => {
+					for(var i=0; i<ROOM_LIST[room].students.length; i++){
+						if(ROOM_LIST[room].students){
+							SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('answerQuickQuestion',setQuestion,settings);
+						}
+					}
+				}, ROOM_LIST[room].settings.rounds, room);*/
 			}
 		}
 	});
@@ -188,14 +224,15 @@ io.sockets.on('connection', function(socket){
 					for(var i=0; i<ROOM_LIST[room].students.length; i++){
 						if (exists(ROOM_LIST[room].students[i])) {
 							if(ROOM_LIST[room].students[i].id == socket.id){
+								var previousStudents = ROOM_LIST[room].students.slice();
 							 	delete ROOM_LIST[room].students[i];
 								ROOM_LIST[room].students = cleanArray(ROOM_LIST[room].students);
 								for(var i=0; i<ROOM_LIST[room].students.length; i++){
 									if(ROOM_LIST[room].students[i]){
-										SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room]);
+										SOCKET_LIST[ROOM_LIST[room].students[i].id].emit('updateLobby',ROOM_LIST[room], previousStudents, socket.id);
 									}
 								}
-								SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room])
+								SOCKET_LIST[ROOM_LIST[room].teacherId].emit('updateLobby',ROOM_LIST[room], previousStudents, socket.id);
 								break;
 							}
 						}

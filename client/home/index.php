@@ -29,7 +29,7 @@
     <script src="socket.js"></script>
   </head>
   <body>
-    <div id="mainHome">
+    <div id="mainHome" style="//display:none;">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <img src="../img/logo.png" style="margin-left:15px;margin-top:5px;width:128px;height:64px;" >
@@ -43,6 +43,9 @@
 
         <div id="navbar" class="navbar-menu" style="margin-left: 25px;">
           <div class="navbar-start">
+            <a class="navbar-item" href="../home">
+              Home
+            </a>
             <a class="navbar-item" href="../aboutus">
               About Us
             </a>
@@ -55,11 +58,13 @@
       <center>
         <p class="is-size-3">What would you like to play with your students?</p>
         <br/>
-        <button class="button is-large" onclick="showPopup(0);">Flashcards</button>
-        <button class="button is-large" onclick="showPopup(1);">Pictionary</button>
         <button class="button is-large" onclick="showPopup(2);">Quick Quiz</button>
-        <button class="button is-large" onclick="showPopup(3);">Matching</button>
         <button class="button is-large" onclick="showPopup(4);">Test</button>
+        <br/><br/><br/><br/><br/><br/>
+        <h1 class="is-size-3 has-text-weight-semibold">Coming Soon!</h1>
+        <button class="button is-large" onclick="//showPopup(0);">Flashcards</button>
+        <button class="button is-large" onclick="//showPopup(1);">Pictionary</button>
+        <button class="button is-large" onclick="//showPopup(3);">Matching</button>
       </center>
       <div id="popupHTML">
         <div id="popup0" class="popup" style="">
@@ -81,7 +86,7 @@
                 </select>
                 <br/><br/>
                 <p class="is-size-5">Room Name</p>
-                <input id="roomname1" class="input" placeholder="My Room" />
+                <input id="roomname0" class="input" placeholder="My Room" maxlength="20" />
                 <strong class="is-size-6 has-text-grey">*Optional</strong>
               </div>
               <div class="column">
@@ -135,7 +140,7 @@
                 </select>
                 <br/><br/>
                 <p class="is-size-5">Room Name</p>
-                <input id="roomname1" class="input" placeholder="My Room" />
+                <input id="roomname1" class="input" placeholder="My Room" maxlength="20" />
                 <strong class="is-size-6 has-text-grey">*Optional</strong>
               </div>
               <div class="column">
@@ -191,7 +196,7 @@
                 </select>
                 <br/><br/>
                 <p class="is-size-5">Room Name</p>
-                <input id="roomname1" class="input" placeholder="My Room" />
+                <input id="roomname2" class="input" placeholder="My Room" maxlength="20" />
                 <strong class="is-size-6 has-text-grey">*Optional</strong>
               </div>
               <div class="column">
@@ -239,7 +244,7 @@
                 </select>
                 <br/><br/>
                 <p class="is-size-5">Room Name</p>
-                <input id="roomname1" class="input" placeholder="My Room" />
+                <input id="roomname3" class="input" placeholder="My Room" maxlength="20" />
                 <strong class="is-size-6 has-text-grey">*Optional</strong>
               </div>
               <div class="column">
@@ -286,7 +291,7 @@
               <div class="column">
                 <br/>
                 <p class="is-size-5">Room Name</p>
-                <input id="roomname1" class="input" placeholder="My Room" />
+                <input id="roomname4" class="input" placeholder="My Room" maxlength="20" />
                 <strong class="is-size-6 has-text-grey">*Optional</strong>
                 <br/>
               </div>
@@ -321,6 +326,13 @@
       <center><h1 class="is-size-1">Your quiz is active!</h1></center>
       <center><h1 class="is-size-3">View your students progress live!</h1></center>
       <hr/>
+      <center><h1 class="is-size-2">Average Class Score</h1></center>
+      <center><div>
+        <progress id="correctAverage" class="averageProgress" style="position:absolute;" value="0" max="500"></progress>
+        <progress id="incorrectAverage" class="averageProgress" style="--xOffset:0px;" value="0" max="500"></progress>
+      </div></center>
+      <br/><br/>
+      <center><h1 class="is-size-2">Individual Scores</h1></center>
       <center>
         <div style="width:100%;display:flex;">
           <div class="column" id="lobbyColumn1Scores">
@@ -334,6 +346,9 @@
           </div>
         </div>
       </center>
+      <br/><br/>
+      <center><h1 class="is-size-4">Are your students finished?</h1></center>
+      <center><button class="button is-warning is-medium" onclick="endRoom();">Home</button></center>
     </div>
     <div id="lobbyRoom" style="display:none;">
       <br/>
@@ -360,6 +375,45 @@
       </div>
     </center>
       <!--button onclick="startGame();">Start Game</button-->
+    </div>
+    <div id="quickGameRoom" style="display:none;">
+      <center>
+      <div id="quickAskQuestion" style="//display:none;">
+        <h1  class="is-size-1 has-text-black">Students Are Answering Questions</h1>
+        <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
+        <!--<h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;left:20px;" id="quickQuizTime" >0 Seconds</h1>-->
+        <hr style="border:1px solid black;">
+        <h1  class="is-size-3 has-text-black" id="quickQuestionShowed" style="max-width:95%;word-wrap:break-word;" >Question 1</h1>
+        <br>
+        <hr style="border:1px solid grey;margin:0px;">
+        <br>
+        <br>
+        <div style="width:100%;display:flex;">
+          <div id="quickQuizQuestionAnswers" style="width:50%;display:inline-block;">
+            <!--
+            <h1 class="is-size-3 has-text-black" style="">Answer 1</h1>
+            <progress value="0" max="1"></progress>
+            <br>
+            <br>
+            <h1 class="is-size-3 has-text-black" style="">Answer 2</h1>
+            <progress value="0" max="1"></progress>-->
+          </div><!--
+          --><div style="width: 50%;display:inline-block;">
+            <center><h1 class="is-size-2 has-text-weight-semibold">Leaderboard</h1></center>
+            <div id="leaderboardContainer">
+              <!--<center><h1 id="leader" class="is-size-4 has-text-weight-light">1. asdf</h1></center>
+              <center><h1 id="leader" class="is-size-4 has-text-weight-light">2. asdf</h1></center>
+              <center><h1 id="leader" class="is-size-4 has-text-weight-light">3. asdf</h1></center>
+              <center><h1 id="leader" class="is-size-4 has-text-weight-light">4. asdf</h1></center>
+              <center><h1 id="leader" class="is-size-4 has-text-weight-light">5. asdf</h1></center>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="quickShowAnswer" style="display:none;">
+        <button class="button notmoving is-medium is-primary" onclick="quickStartNextQuestion()" style="position:absolute; right: 40px;top:5px;" id="quickNextQuestion" >Next Question</button>
+      </div>
+    </center>
     </div>
   </body>
   <script>
@@ -601,20 +655,32 @@
     progress::-webkit-progress-value {
       float: left;
       background-color: rgb(81, 224, 49);
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      border-top-right-radius: 0px;
-      border-bottom-right-radius: 0px;
+      border-top-left-radius: var(--borderTopLeft);
+      border-bottom-left-radius: var(--borderBottomLeft);
+      border-top-right-radius: var(--borderTopRight);
+      border-bottom-right-radius: var(--borderBottomRight);
       position:relative;
       //right:75px;
     }
     .other::-webkit-progress-value {
       background-color: rgb(247, 62, 30);
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
-      border-top-left-radius: 0px;
-      border-bottom-left-radius: 0px;
+      //border-top-right-radius: 10px;
+      //border-bottom-right-radius: 10px;
+      //border-top-left-radius: 0px;
+      //border-bottom-left-radius: 0px;
       left: var(--xOffset);
+    }
+    .averageProgress {
+      width: 500px;
+    }
+    .averageProgress::-webkit-progress-value {
+      left: var(--xOffset);
+    }
+    #incorrectAverage::-webkit-progress-value {
+      background-color: rgb(247, 62, 30);
+    }
+    .noRound::-webkit-progress-bar {
+      border-radius: 0px;
     }
     button {
       margin: 25px;

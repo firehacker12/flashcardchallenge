@@ -1,8 +1,8 @@
 body{
   overflow-y: hidden;
   margin:0;
-  //background-color: rgba(0,132,234,1);
-  background-color: rgb(240, 240, 240);
+  background-color: rgba(240, 240, 240, 1);
+  //background-color: rgb(22, 215, 83);
   user-select: none;
 
 }

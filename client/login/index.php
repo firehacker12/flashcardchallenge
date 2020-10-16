@@ -17,7 +17,7 @@
 
 <html>
   <head>
-    <title>Quizzard</title>
+    <title>Login</title>
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
     <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
     <link rel="shortcut icon" type="image/png" href="../favicon.png" />
@@ -39,6 +39,9 @@
 
       <div id="navbar" class="navbar-menu" style="margin-left: 25px;">
         <div class="navbar-start">
+          <a class="navbar-item" href="../home">
+            Home
+          </a>
           <a class="navbar-item" href="../aboutus">
             About Us
           </a>

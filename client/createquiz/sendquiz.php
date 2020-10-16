@@ -3,6 +3,7 @@
   include "../classes/init.php";
 
   if (isset($_SESSION['Username'])) {
+    //$QuizJSON = htmlspecialchars($_POST['QuizJSON']);
     $QuizJSON = $_POST['QuizJSON'];
     $QuizName = $_POST['QuizName'];
     $Author = $_SESSION['Username'];

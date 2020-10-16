@@ -1,10 +1,11 @@
 <html>
   <head>
-    <title>Game</title>
+    <title>Play</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
@@ -13,28 +14,37 @@
   <body>
     <center>
       <div id='joinMake' style="//display:none;">
-        <br>
-        <h1 style="font-family: 'Permanent Marker', cursive;font-size:4em;">Quizzard</h1>
+        <br/><br/><br/><br/><br/>
+        <h1 style="font-family: 'Luckiest Guy', cursive;font-size:4em;color:black;">Quizzard</h1>
 
         <div id="codeE" style="position:absolute;top:40%;left:45%;width:10%;height:10%;">
-          <input id="enterCode" placeholder="Code" maxlength="6" type="text" style="width:100%;height:50%;font-family: 'Permanent Marker', cursive;font-size:1.5em;"/><br><br>
-          <button id="0" onclick="roomJoin();" style="width:95%;height:40%;font-family: 'Permanent Marker', cursive;font-size:1.5em;" >Join</button><br>
+          <input id="enterCode" placeholder="Code" maxlength="6" type="text" style="width:100%;height:50%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;"/><br><br>
+          <button class="button is-primary" id="0" onclick="roomJoin();" style="width:95%;height:40%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;" >Join</button><br>
+          <br/>
+          <p class="is-size-5 has-text-grey has-text-weight-semibold">Version 1.0.0</p>
           <p style="display:none;" id="codeError">Enter A Valid Code</p>
         </div>
 
         <div id="nameE" style="position:absolute;top:40%;left:45%;width:10%;height:10%;">
-          <input id="enterName" placeholder="Name" maxlength="12" type="text" style="width:100%;height:50%;font-family: 'Permanent Marker', cursive;font-size:1.5em;"/><br><br>
-          <button id="0" onclick="switchName();" style="width:95%;height:40%;font-family: 'Permanent Marker', cursive;font-size:1.5em;" >Enter</button><br>
+          <input id="enterName" placeholder="Username" maxlength="12" type="text" style="width:100%;height:50%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;"/><br><br>
+          <button class="button is-primary" id="0" onclick="switchName();" style="width:95%;height:40%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;" >Enter</button><br>
+          <br/>
+          <p class="is-size-5 has-text-grey has-text-weight-semibold">Version 1.0.0</p>
           <p style="display:none;" id="nameError">Enter A Valid Name</p>
+          <br/><br/>
+          <p class="is-size-4 has-text-weight-semibold">Or <a href="../register">Create a quiz!</a></p>
         </div>
       </div>
       <div id='lobbyScreen' style='display:none;'>
-        <h1>Lobby</h1>
-        <h1 id="lobbyCode"></h1>
+        <h1 class="is-size-2 has-text-weight-semibold" id="lobbyName"></h1>
+        <h1 class="is-size-5 has-text-weight-light" id="lobbyCode"></h1>
         <br><br><br>
-        <div id='studentLobbyList'>
+        <div id='studentLobbyList' style="display:none;">
 
         </div>
+        <br/><br/><br/><br/><br/><br/>
+        <center><h1 class="is-size-1 has-text-weight-semibold">Great!</h1></center>
+        <center><h1 class="is-size-2 has-text-weight-light">Just wait for your teacher!</h1></center>
       </div>
 
       <div id="gameCavas" style="display:none;">
@@ -66,12 +76,68 @@
         </center>
       </div>
       <div id="quickQuizWait" style="display:none;">
-        <div>
-          <center>
+        <center>
+        <div id="quickQuizWaitMain" style="display:none;">
           <h1  class="is-size-1 has-text-black">Waiting For Everyone To Answer</h1>
+          <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
+          <!--h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;// border:1px solid black;//border-radius: 50px;// background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1-->
+          <hr style="border:1px solid black;">
+          <div class="loader" style="position: absolute;top:calc(50% - 60px);left:calc(50% - 60px);"></div>
+          <style>
+          .loader {
+            border: 16px solid #dadada;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+          }
+
+          /* Safari */
+          @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+          }
+
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          </style>
+        </div>
+        <div id="quickQuizWaitBoard" style="display:none;">
+          <h1  class="is-size-1 has-text-black">Showing Answers</h1>
           <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
           <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;// border:1px solid black;//border-radius: 50px;// background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1>
           <hr style="border:1px solid black;">
+          <h1  class="is-size-3 has-text-black" id="quickQuestionWaitShowed" style="max-width:95%;word-wrap:break-word;" >Question 1</h1>
+          <br>
+          <hr style="border:1px solid grey;margin:0px;">
+          <br/><br/><br/>
+          <div style="width: 100%;display:flex;">
+            <div style="width: 50%;display:inline-block;">
+              <h1  class="is-size-2 has-text-black has-text-weight-semibold">Correct Answer</h1>
+              <h1  class="is-size-3 has-text-black has-text-weight-light" id="quickQuizWaitAnswer">Answer 1</h1>
+              <br>
+              <h1  class="is-size-2 has-text-black has-text-weight-semibold">Your Answer</h1>
+              <h1  class="is-size-3 has-text-black has-text-weight-light" id="quickQuizWaitYourAnswer">Your Answer</h1>
+              <br>
+              <br>
+              <br>
+              <h1  class="is-size-1 has-text-primary" id="quickQuizWaitCI">Correct</h1>
+            </div><!--
+            --><div style="width: 50%;display:inline-block;">
+              <center><h1 class="is-size-2 has-text-weight-semibold">Leaderboard</h1></center>
+              <div id="leaderboardContainer">
+                <!--<center><h1 id="leader" class="is-size-4 has-text-weight-light">1. asdf</h1></center>
+                <center><h1 id="leader" class="is-size-4 has-text-weight-light">2. asdf</h1></center>
+                <center><h1 id="leader" class="is-size-4 has-text-weight-light">3. asdf</h1></center>
+                <center><h1 id="leader" class="is-size-4 has-text-weight-light">4. asdf</h1></center>
+                <center><h1 id="leader" class="is-size-4 has-text-weight-light">5. asdf</h1></center>-->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -97,9 +163,9 @@
         for (var i=0; i<mySet[index].fA.length+1; i++) {
           if (document.getElementById("question"+(index+1)+"answer"+i).checked) {
             console.log(index, document.getElementById('question'+(index+1)+'label'+i).textContent.substring(3, document.getElementById('question'+(index+1)+'label'+i).textContent.length));
-            document.getElementById("question"+(index+1)).setAttribute("style","display:none;flex-direction: column; width:65%;");
+            document.getElementById("question"+(index+1)).setAttribute("style","display:none;flex-direction: column; width:100%;");
             if (document.getElementById("question"+(index+2)) != undefined) {
-              document.getElementById("question"+(index+2)).setAttribute("style","display:flex;flex-direction:column; width: 65%;");
+              document.getElementById("question"+(index+2)).setAttribute("style","display:flex;flex-direction:column; width: 100%;");
             }
             else {
               document.getElementById("finishedDiv").setAttribute("style","");
@@ -119,35 +185,35 @@
         var elem = document.createElement("div");
         elem.setAttribute("id","question"+(i+1));
         if (i==0) {
-          elem.setAttribute("style","display:flex;flex-direction: column;width:65%;");
+          elem.setAttribute("style","display:flex;flex-direction: column;width:100%;");
         }
         else {
-          elem.setAttribute("style","display:none;flex-direction: column;width:65%;");
+          elem.setAttribute("style","display:none;flex-direction: column;width:100%;");
         }
-        elem.innerHTML += "<br/><p>"+(i+1)+"/"+(currentSet.length)+"</p><br/>";
-        elem.innerHTML += "<h1 style='text-align: middle;' class='is-size-1'>"+(i+1)+". "+currentSet[i].q+"</h1>";
+        elem.innerHTML += "<br/><center><p>"+(i+1)+"/"+(currentSet.length)+"</p></center><br/>";
+        elem.innerHTML += "<center><h1 style='text-align: middle;' class='is-size-1'>"+(i+1)+". "+currentSet[i].q+"</h1></center>";
         var randomCorrect = floor(random(0, currentSet[i].fA.length));
         var currentLetterIndex = 0;
         var answerIndex = 0;
         for (var j=0; j<currentSet[i].fA.length; j++) {
           if (j == randomCorrect) {
             if (random() < .5) {
-              var correctHTML = "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div>";
+              var correctHTML = "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div></center>";
               elem.innerHTML += correctHTML;
               currentLetterIndex++;
               answerIndex++;
-              elem.innerHTML += "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div>";
+              elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
             }
             else {
-              elem.innerHTML += "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div>";
+              elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
               currentLetterIndex++;
               answerIndex++;
-              var correctHTML = "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div>";
+              var correctHTML = "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div></center>";
               elem.innerHTML += correctHTML;
             }
           }
           else {
-            elem.innerHTML += "<br/><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div>";
+            elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
           }
           answerIndex++;
           currentLetterIndex++;

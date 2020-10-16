@@ -49,6 +49,8 @@ function roomJoin() {
 function sendQuickAnswer(ans){
   socket.emit('sendQuickAnswer',ans);
   document.getElementById('quickQuizWait').setAttribute("style","");
+  document.getElementById('quickQuizWaitMain').setAttribute("style","");
+  document.getElementById('quickQuizWaitBoard').setAttribute("style","display:none;");
   document.getElementById('quickQuiz').setAttribute("style","display:none;");
   quickAnswerSave = ans;
   quickGameTrue = false;
@@ -57,16 +59,27 @@ function sendQuickAnswer(ans){
 
 function quickFailed(){
   socket.emit('sendQuickAnswer',"╬");
-  quickAnswerSave = "╬";
-  quickGameTrue = false;
-  quickTimer = 0;
   document.getElementById('quickQuizWait').setAttribute("style","");
+  document.getElementById('quickQuizWaitMain').setAttribute("style","");
+  document.getElementById('quickQuizWaitBoard').setAttribute("style","display:none;");
   document.getElementById('quickQuiz').setAttribute("style","display:none;");
+  quickAnswerSave = "No Answer Selected";
+  quickGameTrue = false;
+
 }
 
 socket.on('receiveQuestionsTest', (set) => {
   mySet = set;
   setupTest(mySet);
+});
+
+socket.on('receiveQuickLeaderboard', (board) => {
+  document.getElementById("leaderboardContainer").innerHTML = "";
+  for(var i=0; i<board.length; i++){
+    if (i > 4) break;
+    var html = "<center><h1 id='leader' class='is-size-4 has-text-weight-light'>"+(i+1)+". "+board[i].name+" - "+nf(board[i].points,1,2)+"</h1></center>";
+    document.getElementById("leaderboardContainer").innerHTML += html;
+  }
 });
 
 socket.on('checkQuickAnswer', (cA) => {
@@ -75,11 +88,35 @@ socket.on('checkQuickAnswer', (cA) => {
     for(var i=0; i<document.querySelectorAll('#quickQuizPoints').length; i++){
       document.querySelectorAll('#quickQuizPoints')[i].innerHTML = floor(quickPoints)+" Points";
     }
-
+    document.getElementById('quickQuizWaitCI').innerHTML = "Correct";
+    document.getElementById('quickQuizWaitCI').setAttribute('class',"is-size-1 has-text-primary");
   }
+  else{
+    document.getElementById('quickQuizWaitCI').innerHTML = "Incorrect";
+    document.getElementById('quickQuizWaitCI').setAttribute('class',"is-size-1 has-text-danger");
+  }
+  socket.emit('sendQuickPoints',quickPoints);
+  document.getElementById('quickQuizWait').setAttribute('style','');
+  document.getElementById('quickQuizWaitMain').setAttribute("style","display:none;");
+  document.getElementById('quickQuizWaitBoard').setAttribute("style","");
+  document.getElementById('quickQuizWaitAnswer').innerHTML = cA;
+  document.getElementById('quickQuizWaitYourAnswer').innerHTML = quickAnswerSave;
+
 });
 
-setInterval(function(){ if(quickGameTrue){quickTimer += 0.01; document.getElementById('quickQuizTime').innerHTML = nf(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer,1,2) + " Seconds"; if(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer <= 0){quickFailed();} } }, 10);
+setInterval(function(){
+  if(quickGameTrue){
+    quickTimer += 0.01;
+    document.getElementById('quickQuizTime').innerHTML = nf(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer,1,2) + " Seconds";
+    if(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer <= 0){
+      sendQuickAnswer("╬");
+    }
+  }
+}, 10);
+
+function runTimer() {
+
+}
 
 socket.on('wrongCode',()=> {
   document.getElementById('enterCode').value = "";
@@ -90,30 +127,48 @@ socket.on('answerQuickQuestion', (tmpSet,settings) => {
   //console.log(tmpSet.q);
   document.getElementById('quickQuiz').setAttribute('style','');
   document.getElementById('quickQuestionShowed').innerHTML = tmpSet.q;
+  document.getElementById('quickQuestionWaitShowed').innerHTML = tmpSet.q;
   if(tmpSet.fA.length<3){
     document.getElementById('quickQuestionHolder2').setAttribute('style','');
+    document.getElementById('quickQuestionHolder4').setAttribute('style','display:none;');
     let r = random();
+    var falseAnswer1 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
     if(r > 0.5){
       document.getElementById('quickButton21').innerHTML = tmpSet.cA;
-      document.getElementById('quickButton22').innerHTML = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+      document.getElementById('quickButton21').setAttribute("onclick","sendQuickAnswer('"+tmpSet.cA+"');");
+      document.getElementById('quickButton22').setAttribute("onclick","sendQuickAnswer('"+falseAnswer1+"');");
+      document.getElementById('quickButton22').innerHTML = falseAnswer1;
     }
     else{
       document.getElementById('quickButton22').innerHTML = tmpSet.cA;
-      document.getElementById('quickButton21').innerHTML = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+      document.getElementById('quickButton22').setAttribute("onclick","sendQuickAnswer('"+tmpSet.cA+"');");
+      document.getElementById('quickButton21').setAttribute("onclick","sendQuickAnswer('"+falseAnswer1+"');");
+      document.getElementById('quickButton21').innerHTML = falseAnswer1;
     }
   }
   else{
+    document.getElementById('quickQuestionHolder2').setAttribute('style','display:none;');
     document.getElementById('quickQuestionHolder4').setAttribute('style','');
     let r = random();
 
     var falseAnswer1 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
-    var falseAnswer2 = tmpSet.fA[floor(random(0,tmpSet.fA.length))]
-    while (falseAnswer2 == falseAnswer1) {
-      falseAnswer2 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    var falseAnswer2;
+    var falseAnswer3;
+    console.log(tmpSet.fA);
+    var copyArray = shuffle(tmpSet.fA);
+    console.log(copyArray);
+    for(var i=0; i<copyArray.length; i++) {
+      if (copyArray[i] != falseAnswer1) {
+        falseAnswer2 = copyArray[i];
+        break;
+      }
     }
-    var falseAnswer3 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
-    while (falseAnswer2 == falseAnswer3 || falseAnswer1 == falseAnswer3) {
-      falseAnswer3 = tmpSet.fA[floor(random(0,tmpSet.fA.length))];
+    copyArray = shuffle(tmpSet.fA);
+    for(var i=0; i<copyArray.length; i++) {
+      if (copyArray[i] != falseAnswer1 && copyArray[i] != falseAnswer2) {
+        falseAnswer3 = copyArray[i];
+        break;
+      }
     }
     if(r < 0.25){
       document.getElementById('quickButton41').innerHTML = tmpSet.cA;
@@ -163,6 +218,25 @@ socket.on('answerQuickQuestion', (tmpSet,settings) => {
 
 });
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 socket.on('testCode',(code) => {
   console.log(code);
 });
@@ -173,8 +247,9 @@ socket.on('roomClosed', () => {
 
 socket.on('startGame', (room) => {
   document.getElementById("lobbyScreen").setAttribute('style','display:none;');
-  console.log(room.settings.gameType);
+  //console.log(room.settings.gameType);
   gameSetting = room.settings;
+  //console.log(room.teacher);
   switch(room.settings.gameType) {
     case "pic":
       document.getElementById('gameCavas').setAttribute('style',"");
@@ -200,6 +275,7 @@ socket.on('joinLobby',(room,id_) => {
     //teacher = true;
   //}
   document.getElementById('lobbyCode').innerHTML = room.id;
+  document.getElementById("lobbyName").innerHTML = room.teacher;
   document.getElementById('studentLobbyList').innerHTML = "";
   gameType = room.settings.gameType;
   for(var i=0; i<room.students.length; i++){
