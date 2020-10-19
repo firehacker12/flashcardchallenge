@@ -6,45 +6,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <link href="style.css" type="text/css" rel="stylesheet" />
     <script src="socket.js"></script>
     <script src="main.js"></script>
   </head>
-  <body>
+  <body style="background-color: rgb(10, 10, 10);">
     <center>
       <div id='joinMake' style="//display:none;">
         <br/><br/><br/><br/><br/>
-        <h1 style="font-family: 'Luckiest Guy', cursive;font-size:4em;color:black;">Quizzard</h1>
+        <h1 style="font-family: 'Luckiest Guy', cursive;font-size:4em;color:#F24C3D;">Quizzard</h1>
 
         <div id="codeE" style="position:absolute;top:40%;left:45%;width:10%;height:10%;">
           <input id="enterCode" placeholder="Code" maxlength="6" type="text" style="width:100%;height:50%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;"/><br><br>
-          <button class="button is-primary" id="0" onclick="roomJoin();" style="width:95%;height:40%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;" >Join</button><br>
+          <button class="button" id="0" onclick="roomJoin();" style="width:95%;height:40%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;background-color:#F24C3D;color:white;border:#260F25;" >Join</button><br>
           <br/>
-          <p class="is-size-5 has-text-grey has-text-weight-semibold">Version 1.0.0</p>
+          <p class="is-size-5 has-text-grey has-text-weight-semibold">Version 1.0.2</p>
           <p style="display:none;" id="codeError">Enter A Valid Code</p>
         </div>
 
         <div id="nameE" style="position:absolute;top:40%;left:45%;width:10%;height:10%;">
           <input id="enterName" placeholder="Username" maxlength="12" type="text" style="width:100%;height:50%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;"/><br><br>
-          <button class="button is-primary" id="0" onclick="switchName();" style="width:95%;height:40%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;" >Enter</button><br>
+          <button class="button" id="0" onclick="switchName();" style="width:95%;height:40%;font-family: 'Luckiest Guy', cursive;font-size:1.5em;background-color:#F24C3D;color:white;border:#260F25;" >Enter</button><br>
           <br/>
-          <p class="is-size-5 has-text-grey has-text-weight-semibold">Version 1.0.0</p>
+          <p class="is-size-5 has-text-grey has-text-weight-semibold">Version 1.0.2</p>
           <p style="display:none;" id="nameError">Enter A Valid Name</p>
           <br/><br/>
           <p class="is-size-4 has-text-weight-semibold">Or <a href="../register">Create a quiz!</a></p>
         </div>
       </div>
       <div id='lobbyScreen' style='display:none;'>
-        <h1 class="is-size-2 has-text-weight-semibold" id="lobbyName"></h1>
-        <h1 class="is-size-5 has-text-weight-light" id="lobbyCode"></h1>
+        <h1 class="is-size-2 has-text-weight-semibold" style="color:#F2CFC2;" id="lobbyName">Lobby Name</h1>
+        <h1 class="is-size-5 has-text-weight-light" style="color:#F2CFC2;" id="lobbyCode">Lobby Code</h1>
         <br><br><br>
         <div id='studentLobbyList' style="display:none;">
 
         </div>
         <br/><br/><br/><br/><br/><br/>
-        <center><h1 class="is-size-1 has-text-weight-semibold">Great!</h1></center>
-        <center><h1 class="is-size-2 has-text-weight-light">Just wait for your teacher!</h1></center>
+        <center><h1 class="is-size-1 has-text-weight-semibold" style="color:#F24C3D;">Great!</h1></center>
+        <center><h1 class="is-size-2 has-text-weight-light" style="color:#F24C3D;">Just wait for your teacher!</h1></center>
       </div>
 
       <div id="gameCavas" style="display:none;">
@@ -52,42 +54,43 @@
       </div>
 
       <div id="quickQuiz" style="display:none;">
-        <div>
+        <div id="heightReference">
           <center>
-          <h1  class="is-size-1 has-text-black">Answer The Questions</h1>
+            <br/>
           <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
-          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;" id="quickQuizPoints" >0 Points</h1>
-          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;left:20px;" id="quickQuizTime" >0 Seconds</h1>
-          <hr style="border:1px solid black;">
-          <h1  class="is-size-3 has-text-black" id="quickQuestionShowed" style="max-width:95%;word-wrap:break-word;" >Question 1</h1>
+          <h1 class="is-size-3" style="padding: 10px 20px 10px 20px;position: absolute;top:15px;right:20px;text-align:right;font-family: 'Roboto Mono', monospace;color:#F24C3D;" id="quickQuizPoints" >0</h1>
+          <h1 class="is-size-3" style="padding: 10px 20px 10px 20px;position: absolute;top:15px;left:20px;font-family: 'Roboto Mono', monospace;color:#F24C3D;" id="quickQuizTime" >0</h1>
+          <div style="width:75%;word-wrap: break-word;">
+            <h1  class="is-size-3" id="quickQuestionShowed" style="max-width:95%;word-wrap:break-word;color:#F24C3D;" >Question 1</h1>
+          </div>
           <br>
-          <hr style="border:1px solid grey;margin:0px;">
+          <hr style="border:1px solid black;margin:0px;">
         </div>
           <div id="quickQuestionHolder2" style="display:none;">
             <button class="button //is-info" style="width:50%;height:calc(100% - 196px);border-radius:0px;font-size:3em;background-color:#A8E4A0;" id="quickButton21" >Button 1</button><!--
             --><button class="button //is-danger" style="width:50%;height:calc(100% - 196px);border-radius:0px;font-size:3em;background-color:#B0E0E6;" id="quickButton22" >Button 2</button>
           </div>
-          <div id="quickQuestionHolder4" style="display:none;">
-            <button class="button //is-danger" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#A8E4A0;" id="quickButton41" >Button 1</button><!--
-            --><button class="button //is-link" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#B0E0E6;" id="quickButton42" >Button 2</button><!--
-            --><button class="button //is-warning" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#C8A2C8;" id="quickButton43" >Button 3</button><!--
-            --><button class="button //is-success" style="width:50%;height:calc(50% - 196px/2);border-radius:0px;font-size:3em;background-color:#F3E5AB;" id="quickButton44" >Button 4</button>
+          <div id="quickQuestionHolder4" style="//display:none;">
+            <button class="button //is-danger" style="width:50%;border-radius:0px;font-size:3em;background-color:#BF2A45;" id="quickButton41" >Button 1</button><!--
+            --><button class="button //is-link" style="width:50%;border-radius:0px;font-size:3em;background-color:#59023B;" id="quickButton42" >Button 2</button><!--
+            --><button class="button //is-warning" style="width:50%;border-radius:0px;font-size:3em;background-color:#F2CFC2;" id="quickButton43" >Button 3</button><!--
+            --><button class="button //is-success" style="width:50%;border-radius:0px;font-size:3em;background-color:#F24C3D;" id="quickButton44" >Button 4</button>
           </div>
         </center>
       </div>
       <div id="quickQuizWait" style="display:none;">
         <center>
         <div id="quickQuizWaitMain" style="display:none;">
-          <h1  class="is-size-1 has-text-black">Waiting For Everyone To Answer</h1>
+          <br/>
+          <h1  class="is-size-1" style="color:#F2441D">Waiting For Everyone To Answer</h1>
           <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
           <!--h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;// border:1px solid black;//border-radius: 50px;// background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1-->
-          <hr style="border:1px solid black;">
           <div class="loader" style="position: absolute;top:calc(50% - 60px);left:calc(50% - 60px);"></div>
           <style>
           .loader {
             border: 16px solid #dadada;
             border-radius: 50%;
-            border-top: 16px solid #3498db;
+            border-top: 16px solid #e34c2d;
             width: 120px;
             height: 120px;
             -webkit-animation: spin 2s linear infinite; /* Safari */
@@ -107,28 +110,29 @@
           </style>
         </div>
         <div id="quickQuizWaitBoard" style="display:none;">
-          <h1  class="is-size-1 has-text-black">Showing Answers</h1>
+          <br/>
           <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
-          <h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;right:20px;text-align:right;// border:1px solid black;//border-radius: 50px;// background-color: rgb(241,70,104);" id="quickQuizPoints" >0 Points</h1>
-          <hr style="border:1px solid black;">
-          <h1  class="is-size-3 has-text-black" id="quickQuestionWaitShowed" style="max-width:95%;word-wrap:break-word;" >Question 1</h1>
+          <h1 class="is-size-3" style="padding: 10px 20px 10px 20px;position: absolute;top:15px;right:20px;text-align:right;// border:1px solid black;//border-radius: 50px;// background-color: rgb(241,70,104);font-family: 'Roboto Mono', monospace;color:#F24C3D;" id="quickQuizPoints" >0</h1>
+          <div style="width:75%;word-break:break-word;">
+            <h1  class="is-size-3" id="quickQuestionWaitShowed" style="max-width:95%;word-wrap:break-word;color:#F24C3D;" >Question 1</h1>
+          </div>
           <br>
           <hr style="border:1px solid grey;margin:0px;">
           <br/><br/><br/>
           <div style="width: 100%;display:flex;">
             <div style="width: 50%;display:inline-block;">
-              <h1  class="is-size-2 has-text-black has-text-weight-semibold">Correct Answer</h1>
-              <h1  class="is-size-3 has-text-black has-text-weight-light" id="quickQuizWaitAnswer">Answer 1</h1>
+              <h1  class="is-size-2 has-text-weight-semibold" style="color:#F28705;">Correct Answer</h1>
+              <h1  class="is-size-3 has-text-weight-light" id="quickQuizWaitAnswer" style="color:#F28705;">Answer 1</h1>
               <br>
-              <h1  class="is-size-2 has-text-black has-text-weight-semibold">Your Answer</h1>
-              <h1  class="is-size-3 has-text-black has-text-weight-light" id="quickQuizWaitYourAnswer">Your Answer</h1>
+              <h1  class="is-size-2 has-text-weight-semibold" style="color:#F28705;">Your Answer</h1>
+              <h1  class="is-size-3 has-text-weight-light" id="quickQuizWaitYourAnswer" style="color:#F28705;">Your Answer</h1>
               <br>
               <br>
               <br>
               <h1  class="is-size-1 has-text-primary" id="quickQuizWaitCI">Correct</h1>
             </div><!--
             --><div style="width: 50%;display:inline-block;">
-              <center><h1 class="is-size-2 has-text-weight-semibold">Leaderboard</h1></center>
+              <center><h1 class="is-size-2 has-text-weight-semibold" style="color:#7A36D9">Leaderboard</h1></center>
               <div id="leaderboardContainer">
                 <!--<center><h1 id="leader" class="is-size-4 has-text-weight-light">1. asdf</h1></center>
                 <center><h1 id="leader" class="is-size-4 has-text-weight-light">2. asdf</h1></center>
@@ -144,8 +148,8 @@
       <div id="test" style="display:none;">
         <div id="finishedDiv" style="display:none;">
           <br/><br/><br/><br/><br/><br/><br/><br/><br/>
-          <center><h1 class="is-size-1">You Finished Your Test!</h1></center>
-          <center><h1 class="is-size-3">Please wait for your teacher</h1></center>
+          <center><h1 class="is-size-1 has-text-danger">You Finished Your Test!</h1></center>
+          <center><h1 class="is-size-3 has-text-warning">Please wait for your teacher</h1></center>
         </div>
       </div>
 
@@ -158,6 +162,20 @@
     }
   </style>
   <script>
+    function fixButtonHeights() {
+      var offsetHeight = document.getElementById("heightReference").clientHeight/2;
+      document.getElementById("quickButton41").setAttribute("style","width:50%;border-radius:0px;border-color: black;font-size:3em;background-color:#DB5A00;color:black;height:"+((window.innerHeight/2)-offsetHeight)+"px;");
+      document.getElementById("quickButton42").setAttribute("style","width:50%;border-radius:0px;border-color: black;font-size:3em;background-color:#9A1AD9;color:black;height:"+((window.innerHeight/2)-offsetHeight)+"px;");
+      document.getElementById("quickButton43").setAttribute("style","width:50%;border-radius:0px;border-color: black;font-size:3em;background-color:#A7D904;color:black;height:"+((window.innerHeight/2)-offsetHeight)+"px;");
+      document.getElementById("quickButton44").setAttribute("style","width:50%;border-radius:0px;border-color: black;font-size:3em;background-color:#F2441D;color:black;height:"+((window.innerHeight/2)-offsetHeight)+"px;");
+      document.getElementById("quickButton21").setAttribute("style","width:50%;border-radius:0px;border-color: black;font-size:3em;background-color:#DB5A00;color:black;height:"+((window.innerHeight)-offsetHeight)+"px;");
+      document.getElementById("quickButton22").setAttribute("style","width:50%;border-radius:0px;border-color: black;font-size:3em;background-color:#9A1AD9;color:black;height:"+((window.innerHeight)-offsetHeight)+"px;");
+    }
+
+    setInterval(() => {
+      fixButtonHeights();
+    }, 20);
+
     function submitQuestion(index) {
       if (mySet) {
         for (var i=0; i<mySet[index].fA.length+1; i++) {
@@ -190,36 +208,36 @@
         else {
           elem.setAttribute("style","display:none;flex-direction: column;width:100%;");
         }
-        elem.innerHTML += "<br/><center><p>"+(i+1)+"/"+(currentSet.length)+"</p></center><br/>";
-        elem.innerHTML += "<center><h1 style='text-align: middle;' class='is-size-1'>"+(i+1)+". "+currentSet[i].q+"</h1></center>";
+        elem.innerHTML += "<br/><center><p class='has-text-primary'>"+(i+1)+"/"+(currentSet.length)+"</p></center><br/>";
+        elem.innerHTML += "<center><h1 style='text-align: middle;' class='is-size-1 has-text-danger'>"+(i+1)+". "+currentSet[i].q+"</h1></center>";
         var randomCorrect = floor(random(0, currentSet[i].fA.length));
         var currentLetterIndex = 0;
         var answerIndex = 0;
         for (var j=0; j<currentSet[i].fA.length; j++) {
           if (j == randomCorrect) {
             if (random() < .5) {
-              var correctHTML = "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div></center>";
+              var correctHTML = "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4 has-text-white' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div></center>";
               elem.innerHTML += correctHTML;
               currentLetterIndex++;
               answerIndex++;
-              elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
+              elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4 has-text-white' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
             }
             else {
-              elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
+              elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4 has-text-white' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
               currentLetterIndex++;
               answerIndex++;
-              var correctHTML = "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div></center>";
+              var correctHTML = "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4 has-text-white' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].cA+"</label></div></center>";
               elem.innerHTML += correctHTML;
             }
           }
           else {
-            elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
+            elem.innerHTML += "<br/><center><div style='text-align: left;margin-left: 30%;'><input style='width: 100px;' name='answer"+i+"' type='radio' id='question"+(i+1)+"answer"+answerIndex+"'/><label id='question"+(i+1)+"label"+answerIndex+"' class='is-size-4 has-text-white' for='question"+(i+1)+"answer"+answerIndex+"'>"+alpha[currentLetterIndex]+") "+currentSet[i].fA[j]+"</label></div></center>";
           }
           answerIndex++;
           currentLetterIndex++;
         }
         elem.innerHTML += "<br/>";
-        elem.innerHTML += "<center><button class='button is-primary' onclick='submitQuestion("+i+");'>Next Question</button></center>";
+        elem.innerHTML += "<center><button class='button is-primary is-medium' onclick='submitQuestion("+i+");'>Next Question</button></center>";
         testElement.appendChild(elem);
       }
     }

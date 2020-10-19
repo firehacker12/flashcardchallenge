@@ -18,6 +18,7 @@
 <html>
   <head>
     <title>Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@500&display=swap" rel="stylesheet">
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
     <link rel="shortcut icon" type="image/png" href="../favicon.png" />
     <script src="https://kit.fontawesome.com/4a43f383fb.js" crossorigin="anonymous"></script>
@@ -53,18 +54,18 @@
         </div>
       </nav>
       <br/><br/>
-      <center><h1 class="is-size-1 has-text-weight-semibold">Welcome back, <?php echo $_SESSION['Username']; ?>!</h1></center>
+      <center><h1 class="is-size-1 has-text-weight-semibold" style="color:white;">Welcome back, <?php echo $_SESSION['Username']; ?>!</h1></center>
       <br/><br/>
       <center>
-        <p class="is-size-3">What would you like to play with your students?</p>
+        <p class="is-size-3" style="color:white;">What would you like to play with your students?</p>
         <br/>
-        <button class="button is-large" onclick="showPopup(2);">Quick Quiz</button>
-        <button class="button is-large" onclick="showPopup(4);">Test</button>
+        <button class="button is-large" onclick="showPopup(2);" style="background-color:#84D904;border-color:#84D904;color:black;">Quick Quiz</button>
+        <button class="button is-large" onclick="showPopup(4);" style="background-color:#84D904;border-color:#84D904;color:black;">Test</button>
         <br/><br/><br/><br/><br/><br/>
-        <h1 class="is-size-3 has-text-weight-semibold">Coming Soon!</h1>
-        <button class="button is-large" onclick="//showPopup(0);">Flashcards</button>
-        <button class="button is-large" onclick="//showPopup(1);">Pictionary</button>
-        <button class="button is-large" onclick="//showPopup(3);">Matching</button>
+        <h1 class="is-size-3 has-text-weight-semibold" style="color:white;">Coming Soon!</h1>
+        <button class="button is-large" onclick="//showPopup(0);" style="background-color:#84D904;border-color:#84D904;color:black;">Flashcards</button>
+        <button class="button is-large" onclick="//showPopup(1);" style="background-color:#84D904;border-color:#84D904;color:black;">Pictionary</button>
+        <button class="button is-large" onclick="//showPopup(3);" style="background-color:#84D904;border-color:#84D904;color:black;">Matching</button>
       </center>
       <div id="popupHTML">
         <div id="popup0" class="popup" style="">
@@ -353,13 +354,15 @@
     <div id="lobbyRoom" style="display:none;">
       <br/>
       <center>
-      <h1  class="is-size-1 has-text-link">Student Waiting Room</h1>
-      <h1 class="is-size-5 has-text-link" id="gameTypeStrong"></h1>
+      <h1  class="is-size-1" style="color:#F2441D;">Student Waiting Room</h1>
+      <h1 class="is-size-5" style="color:#F2441D;" id="gameTypeStrong"></h1>
       <br>
-      <h1  class="is-size-4 has-text-info" id="lobbyCodeDisplay" >Code: </h1>
+      <h1  class="is-size-4" style="color:#F2441D;font-family: 'Baloo Tammudu 2', cursive;" id="lobbyCodeDisplay" >Code: </h1>
+      <h1 id="studentCountTeacher" class="is-size-3" style='float:left;margin-left: 15px;color:#84D904;'>0 Students</h1>
+      <br/>
       <hr style="border:1px solid black;">
       <br>
-      <button class="button notmoving is-medium is-primary" onclick="startGame();" disabled style="position:absolute; right: 40px;top:60px;" id="startTheRoom" >Start Room</button>
+      <button class="button notmoving is-medium" onclick="startGame();" disabled style="position:absolute; right: 40px;top:60px;background-color:#84D904;border-color: #84D904;" id="startTheRoom" >Start Room</button>
       <div id="lobbyWaitStudentList">
         <div style="width:100%;display:flex;">
           <div class="column" id="lobbyColumn1">
@@ -379,13 +382,13 @@
     <div id="quickGameRoom" style="display:none;">
       <center>
       <div id="quickAskQuestion" style="//display:none;">
-        <h1  class="is-size-1 has-text-black">Students Are Answering Questions</h1>
+        <h1  class="is-size-1" style="color:#84D904;">Students Are Answering Questions</h1>
         <!--h1  class="is-size-4 has-text-black" id="quickQuestionsLeft" >10 / 10</h1-->
         <!--<h1 class="is-size-5 has-text-black" style="padding: 10px 20px 10px 20px;position: absolute;top:30px;left:20px;" id="quickQuizTime" >0 Seconds</h1>-->
-        <hr style="border:1px solid black;">
-        <h1  class="is-size-3 has-text-black" id="quickQuestionShowed" style="max-width:95%;word-wrap:break-word;" >Question 1</h1>
+        <hr style="border:1px solid white;">
+        <h1  class="is-size-3" id="quickQuestionShowed" style="max-width:95%;word-wrap:break-word;color:#F2441D;" >Question 1</h1>
         <br>
-        <hr style="border:1px solid grey;margin:0px;">
+        <hr style="border:1px solid white;margin:0px;">
         <br>
         <br>
         <div style="width:100%;display:flex;">
@@ -399,7 +402,7 @@
             <progress value="0" max="1"></progress>-->
           </div><!--
           --><div style="width: 50%;display:inline-block;">
-            <center><h1 class="is-size-2 has-text-weight-semibold">Leaderboard</h1></center>
+            <center><h1 class="is-size-2 has-text-weight-semibold" style="color:#7A36D9">Leaderboard</h1></center>
             <div id="leaderboardContainer">
               <!--<center><h1 id="leader" class="is-size-4 has-text-weight-light">1. asdf</h1></center>
               <center><h1 id="leader" class="is-size-4 has-text-weight-light">2. asdf</h1></center>
@@ -411,7 +414,10 @@
         </div>
       </div>
       <div id="quickShowAnswer" style="display:none;">
-        <button class="button notmoving is-medium is-primary" onclick="quickStartNextQuestion()" style="position:absolute; right: 40px;top:5px;" id="quickNextQuestion" >Next Question</button>
+        <button class="button notmoving is-medium" onclick="quickStartNextQuestion()" style="position:absolute; right: 40px;top:5px;background-color:#84D904;border-color:#84D904;color:black;" id="quickNextQuestion">Next Question</button>
+      </div>
+      <div id="studentConnectionIssuesDiv">
+
       </div>
     </center>
     </div>
@@ -688,6 +694,7 @@
     }
     html, body {
       overflow-y: hidden;
+      background-color: rgb(10, 10, 10);
     }
     .active {
       filter: brightness(80%);
@@ -720,6 +727,13 @@
       z-index: 3;
       border-radius: 10px;
     }
+    .canKick {
+      transition: all .25s;
+      cursor: pointer;
+    }
+    .canKick:hover {
+      background-color: rgba(255, 0, 0, .4);
+    }
     @keyframes showPopup {
       from {
         top:-100vh;
@@ -731,6 +745,10 @@
 
     .navbar {
       z-index: 1;
+      background-color: #F28705;
+    }
+    .navbar * {
+      color: black;
     }
 
     #overlay {

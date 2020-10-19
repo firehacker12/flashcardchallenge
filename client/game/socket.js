@@ -4,6 +4,8 @@ var teacher = false;
 var gameCode = null;
 var picDrawer = false;
 var mySet;
+var mainMusic = new Audio("../audio/main_quick3.wav");
+var clickSound = new Audio("../audio/click.wav");
 var studentAnswers = [];
 var quickPoints = 0;
 var quickAnswerSave = null;
@@ -35,7 +37,7 @@ function overrideRoomJoin(customName, customCode) {
 }
 
 function roomJoin() {
-  let roomTmp = document.getElementById('enterCode').value.trim();
+  let roomTmp = (document.getElementById('enterCode').value.trim()).toLowerCase();
   let nameTmp = document.getElementById('enterName').value.trim();
   if(roomTmp.length == 6){
     socket.emit('joinRoom',roomTmp,nameTmp);
@@ -47,6 +49,7 @@ function roomJoin() {
 }
 
 function sendQuickAnswer(ans){
+  clickSound.play();
   socket.emit('sendQuickAnswer',ans);
   document.getElementById('quickQuizWait').setAttribute("style","");
   document.getElementById('quickQuizWaitMain').setAttribute("style","");
@@ -74,10 +77,12 @@ socket.on('receiveQuestionsTest', (set) => {
 });
 
 socket.on('receiveQuickLeaderboard', (board) => {
+  mainMusic.pause();
+  mainMusic.currentTime = 0;
   document.getElementById("leaderboardContainer").innerHTML = "";
   for(var i=0; i<board.length; i++){
     if (i > 4) break;
-    var html = "<center><h1 id='leader' class='is-size-4 has-text-weight-light'>"+(i+1)+". "+board[i].name+" - "+nf(board[i].points,1,2)+"</h1></center>";
+    var html = "<center><h1 id='leader' class='is-size-4 has-text-weight-light has-text-warning'>"+(i+1)+". "+board[i].name+" - "+parseInt(board[i].points)+"</h1></center>";
     document.getElementById("leaderboardContainer").innerHTML += html;
   }
 });
@@ -86,14 +91,16 @@ socket.on('checkQuickAnswer', (cA) => {
   if(quickAnswerSave == cA){
     quickPoints += 50 + (((parseInt(gameSetting.rounds.split(' ')[0])-quickTimer)/parseInt(gameSetting.rounds.split(' ')[0]))*50);
     for(var i=0; i<document.querySelectorAll('#quickQuizPoints').length; i++){
-      document.querySelectorAll('#quickQuizPoints')[i].innerHTML = floor(quickPoints)+" Points";
+      document.querySelectorAll('#quickQuizPoints')[i].innerHTML = floor(quickPoints)+"";
     }
     document.getElementById('quickQuizWaitCI').innerHTML = "Correct";
-    document.getElementById('quickQuizWaitCI').setAttribute('class',"is-size-1 has-text-primary");
+    document.getElementById('quickQuizWaitCI').setAttribute('class',"is-size-1");
+    document.getElementById("quickQuizWaitCI").setAttribute("style","color:#84D904;");
   }
   else{
     document.getElementById('quickQuizWaitCI').innerHTML = "Incorrect";
-    document.getElementById('quickQuizWaitCI').setAttribute('class',"is-size-1 has-text-danger");
+    document.getElementById('quickQuizWaitCI').setAttribute('class',"is-size-1");
+    document.getElementById("quickQuizWaitCI").setAttribute("style","color:#F2441D;");
   }
   socket.emit('sendQuickPoints',quickPoints);
   document.getElementById('quickQuizWait').setAttribute('style','');
@@ -106,13 +113,13 @@ socket.on('checkQuickAnswer', (cA) => {
 
 setInterval(function(){
   if(quickGameTrue){
-    quickTimer += 0.01;
-    document.getElementById('quickQuizTime').innerHTML = nf(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer,1,2) + " Seconds";
+    quickTimer += 1;
+    document.getElementById('quickQuizTime').innerHTML = parseInt(gameSetting.rounds.split(' ')[0])-quickTimer;
     if(parseInt(gameSetting.rounds.split(' ')[0])-quickTimer <= 0){
-      sendQuickAnswer("╬");
+      quickFailed();
     }
   }
-}, 10);
+}, 1000);
 
 function runTimer() {
 
@@ -125,6 +132,7 @@ socket.on('wrongCode',()=> {
 
 socket.on('answerQuickQuestion', (tmpSet,settings) => {
   //console.log(tmpSet.q);
+  socket.emit('receivedQuickQuestion');
   document.getElementById('quickQuiz').setAttribute('style','');
   document.getElementById('quickQuestionShowed').innerHTML = tmpSet.q;
   document.getElementById('quickQuestionWaitShowed').innerHTML = tmpSet.q;
@@ -216,6 +224,7 @@ socket.on('answerQuickQuestion', (tmpSet,settings) => {
   quickTimer = 0;
   quickAnswerSave = null;
 
+  mainMusic.play();
 });
 
 function shuffle(array) {

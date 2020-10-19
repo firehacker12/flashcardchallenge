@@ -5,6 +5,7 @@ var gameCode = null;
 var game = null;
 var quickQuestionNum = 0;
 var mySet = null;
+var gameStarted = false;
 var mySettings = null;
 var quickStudentAnswers = [];
 var quickStudentsDone = 0;
@@ -89,6 +90,7 @@ socket.on('roomClosed', () => {
 });
 
 socket.on('startGame', (room) => {
+  gameStarted = true;
   document.getElementById("lobbyRoom").setAttribute('style','display:none;');
   game = room.settings.gameType;
 
@@ -202,13 +204,13 @@ socket.on('receiveQuickAnswer',(ans,studId) => {
   //console.log(ans);
   if(quickStudentAnswers[ans] != undefined || ans == "â•¬"){
     //console.log("r");
-    if(ans == "â•¬"){
+    if(ans == "â•¬") {
       //quickStudentAnswers[ans] += 1;
       quickStudentsDone++;
       //quickAnswersIn++;
-      document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].cA]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].cA]+"</h1><br>";
+      document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3' style='color:white;'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].cA]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3' style='color:#F28705;'>"+quickStudentAnswers[mySet[quickQuestionNum].cA]+"</h1><br>";
       for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
-        document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+"</h1><br>";
+        document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3' style='color:white;'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3' style='color:#F28705;'>"+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+"</h1><br>";
       }
       if(quickStudentsDone >= studentCount){
         //console.log("e");
@@ -222,9 +224,9 @@ socket.on('receiveQuickAnswer',(ans,studId) => {
       quickStudentAnswers[ans] += 1;
       quickStudentsDone++;
       quickAnswersIn++;
-      document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].cA]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].cA]+"</h1><br>";
+      document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3' style='color:white;'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].cA]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3' style='color:#F28705;'>"+quickStudentAnswers[mySet[quickQuestionNum].cA]+"</h1><br>";
       for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
-        document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3 has-text-black'>"+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+"</h1><br>";
+        document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3' style='color:white;'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value="+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+" max="+quickAnswersIn+"></progress><h1 class='in-size-3' style='color:#F28705;'>"+quickStudentAnswers[mySet[quickQuestionNum].fA[i]]+"</h1><br>";
       }
       if(quickStudentsDone >= studentCount){
         //console.log("e");
@@ -254,7 +256,7 @@ socket.on('receiveQuickPoints', (points,id,students) => {
     document.getElementById("leaderboardContainer").innerHTML = "";
     for(var i=0; i<quickStudentPoints.length; i++){
       if (i > 4) break;
-      var html = "<center><h1 id='leader' class='is-size-4 has-text-weight-light'>"+(i+1)+". "+quickStudentPoints[i].name+" - "+nf(quickStudentPoints[i].points,1,2)+"</h1></center>";
+      var html = "<center><h1 id='leader' class='is-size-4 has-text-weight-light has-text-warning'>"+(i+1)+". "+quickStudentPoints[i].name+" - "+parseInt(quickStudentPoints[i].points)+"</h1></center>";
       document.getElementById("leaderboardContainer").innerHTML += html;
     }
     socket.emit('sendQuickLeaderboard',quickStudentPoints);
@@ -286,10 +288,10 @@ function quickQuestion(){
   document.getElementById('quickGameRoom').setAttribute('style','');
   document.getElementById('quickShowAnswer').setAttribute('style','display:none;');
   document.getElementById('quickQuestionShowed').innerHTML = mySet[quickQuestionNum].q;
-  document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].cA+"</h1><progress class='noRound' value='0' max='1'></progress><br><br>";
+  document.getElementById('quickQuizQuestionAnswers').innerHTML = "<h1 class='is-size-3' style='color:white;'>"+mySet[quickQuestionNum].cA+"</h1><progress style='color:#F28705;' class='noRound' value='0' max='1'></progress><br><br>";
   for(var i=0; i<mySet[quickQuestionNum].fA.length; i++){
     quickStudentAnswers[mySet[quickQuestionNum].fA[i]] = 0;
-    document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3 has-text-black'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress class='noRound' value='0' max='1'></progress><br><br>";
+    document.getElementById('quickQuizQuestionAnswers').innerHTML += "<h1 class='is-size-3' style='color:white;'>"+mySet[quickQuestionNum].fA[i]+"</h1><progress style='color:#F28705;' class='noRound' value='0' max='1'></progress><br><br>";
   }
 }
 
@@ -308,15 +310,15 @@ function showPlayers(currentRoom) {
       if(columnNum == 1){
         columnNum++;
         //<div style='position:relative;right:75px;'><progress id='correctProgress"+studentCount+"' value='0' max='150'></progress><progress class='other' style='left:0;width:0px;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div>
-        document.getElementById('lobbyColumn1Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
+        document.getElementById('lobbyColumn1Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-warning'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
       }
       else if(columnNum == 2){
         columnNum++;
-        document.getElementById('lobbyColumn2Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
+        document.getElementById('lobbyColumn2Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-warning'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
       }
       else{
         columnNum = 1;
-        document.getElementById('lobbyColumn3Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
+        document.getElementById('lobbyColumn3Scores').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-warning'>"+currentRoom.students[i].name+"</h1><div style='position:relative;//right:75px;'><progress id='correctProgress"+studentCount+"' style='position:absolute;' value='0' max='150'></progress><progress class='other' style='--xOffset: 0;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div><br>";
       }
       correctStudentIDToDivName[i] = "correctProgress"+studentCount;
       wrongStudentIDToDivName[i] = "wrongProgress"+studentCount;
@@ -329,6 +331,18 @@ function setupTest(set) {
   socket.emit('sendQuestionsTest',set);
 }
 
+socket.on('studentConnectionIssues', (student) => {
+  var elem = document.createElement("h1");
+  elem.setAttribute("style","color:red;");
+  elem.setAttribute("class","is-size-3");
+  elem.setAttribute("id","connectionIssue"+student.id);
+  elem.innerHTML = student.name + " is having connection issues...<br/>";
+  document.getElementById("studentConnectionIssuesDiv").appendChild(elem);
+  setTimeout((documentID) => {
+    document.getElementById(documentID).remove();
+  }, 2500, "connectionIssue"+student.id);
+});
+
 socket.on('joinLobby',(room,id_) => {
   document.getElementById('mainHome').setAttribute("style","display:none");
   document.getElementById('lobbyRoom').setAttribute("style","");
@@ -337,7 +351,7 @@ socket.on('joinLobby',(room,id_) => {
   gameCode = room.id;
   teacher = true;
 
-  document.getElementById('lobbyCodeDisplay').innerHTML = "Code: "+room.id;
+  document.getElementById('lobbyCodeDisplay').innerHTML = "Code: "+room.id.toUpperCase();
   //document.getElementById('lobbyWaitStudentList').innerHTML = "";
   gameType = room.settings.gameType;
 
@@ -348,12 +362,17 @@ socket.on('joinLobby',(room,id_) => {
   }*/
 });
 
+function kickStudent(id){
+  socket.emit("kickStudent",id);
+}
+
 var studentCount = 0;
 socket.on('updateLobby',(room, previousStudents, socketID) => {
   var columnNum = 1;
   //document.getElementById('lobbyCode').innerHTML = room.id;
   //document.getElementById('lobbyWaitStudentList').innerHTML = "";
   document.getElementById("startTheRoom").removeAttribute("disabled");
+  document.getElementById("studentCountTeacher").innerHTML = room.students.length + " Students";
   if (room.students.length == 0) document.getElementById("startTheRoom").setAttribute("disabled", "true");
   document.getElementById('lobbyColumn1').innerHTML = "";
   document.getElementById('lobbyColumn2').innerHTML = "";
@@ -386,17 +405,26 @@ socket.on('updateLobby',(room, previousStudents, socketID) => {
       if(columnNum == 1) {
         columnNum++;
         //<div style='position:relative;right:75px;'><progress id='correctProgress"+studentCount+"' value='0' max='150'></progress><progress class='other' style='left:0;width:0px;' id='wrongProgress"+studentCount+"' value='0' max='150'></progress></div>
-        document.getElementById('lobbyColumn1').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+room.students[i].name+"</h1><br>";
+        document.getElementById('lobbyColumn1').innerHTML += "<h1 class='is-size-4 canKick has-text-weight-semibold has-text-warning' onclick='kickStudent("+room.students[i].id+")'>"+room.students[i].name+"</h1><br>";
       }
       else if(columnNum == 2){
         columnNum++;
-        document.getElementById('lobbyColumn2').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+room.students[i].name+"</h1><br>";
+        document.getElementById('lobbyColumn2').innerHTML += "<h1 class='is-size-4 canKick has-text-weight-semibold has-text-warning' onclick='kickStudent("+room.students[i].id+")'>"+room.students[i].name+"</h1><br>";
       }
       else{
         columnNum = 1;
-        document.getElementById('lobbyColumn3').innerHTML += "<h1 class='is-size-4 has-text-weight-semibold has-text-dark'>"+room.students[i].name+"</h1><br>";
+        document.getElementById('lobbyColumn3').innerHTML += "<h1 class='is-size-4 canKick has-text-weight-semibold has-text-warning' onclick='kickStudent("+room.students[i].id+")'>"+room.students[i].name+"</h1><br>";
       }
       studentCount++;
+    }
+  }
+  if(gameStarted){
+    if(quickStudentsDone >= studentCount && mySettings.gameType == "quick"){
+      socket.emit('quickSendcA',mySet[quickQuestionNum].cA);
+      document.getElementById('quickShowAnswer').setAttribute('style','');
+    }
+    if(0 >= studentCount && mySettings.gameType == "quick"){
+      alert("All Students Have Left");
     }
   }
 });
